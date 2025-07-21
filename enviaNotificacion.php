@@ -75,9 +75,9 @@
 </html>';
 
     //Envío de correo
-  
     
         $correos = $correo; 
+        $correos .= ',hugo.soria@mess.com.mx';
         $Arraycorreos  = explode (",", $correos);
         $mensaje = '';
         
