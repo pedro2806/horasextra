@@ -70,7 +70,7 @@
                     <div id ="FormularioInicio" name ="FormularioInicio" class="card shadow mb-0">
                         <div class="card border-left-warning shadow h-60 py-0">
                             <div class="card-header">
-                                  Iniciar activad <label id="badgeOT" name="badgeOT" class="badge text-bg-warning" style="font-size: 16px;"></label>
+                                Iniciar activad <label id="badgeOT" name="badgeOT" class="badge text-bg-warning" style="font-size: 16px;"></label>
                             </div>
                             <div class="card-body">
                                 
@@ -131,10 +131,10 @@
                                 <input type="hidden" id="coordenadas" name="coordenadas" class="form-control">
                                 <center>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                      <button type="button" class="btn btn-info btn-sm" id="btnNuevaActividad" name="btnNuevaActividad" onClick="showModalNuevaA()">Nueva Actividad</button>
-                                      <button type="button" class="btn btn-warning btn-sm" id="btnFinActividad" name="btnFinActividad" onClick= "finalizarActividad()">Finalizar Actividad</button>
-                                      <button type="button" class="btn btn-success btn-sm" id="btnCerrarServicio" name="btnCerrarServicio"onClick= "cerrarServicio()">Cerrar Servicio</button>
-                                      <button type="button" class="btn btn-primary btn-sm" id="btnVerActividades" name="btnVerActividades"onclick="showModalActividades()">Ver Actividades</button>
+                                        <button type="button" class="btn btn-info btn-sm" id="btnNuevaActividad" name="btnNuevaActividad" onClick="showModalNuevaA()">Nueva Actividad</button>
+                                        <button type="button" class="btn btn-warning btn-sm" id="btnFinActividad" name="btnFinActividad" onClick= "finalizarActividad()">Finalizar Actividad</button>
+                                        <button type="button" class="btn btn-success btn-sm" id="btnCerrarServicio" name="btnCerrarServicio"onClick= "cerrarServicio()">Cerrar Servicio</button>
+                                        <button type="button" class="btn btn-primary btn-sm" id="btnVerActividades" name="btnVerActividades"onclick="showModalActividades()">Ver Actividades</button>
                                     </div>
                                 </center>
                             </div>
@@ -210,7 +210,7 @@
                                 </div>
                             </form>
                             <br>
-                             <center>
+                            <center>
                                 <button type="button" class="btn btn-success" id="ConfirmarN" onClick= "ActividadNueva()">Confirmar</button>
                             </center>
                         </div>                    
@@ -359,8 +359,8 @@
                     $("#btnNuevaActividad").hide();
                     $('#lblSerPendiente').text('No hay actividades pendientes');
                     Swal.fire({
-                          icon: "info",
-                          text: "¡Sin Registros!",
+                            icon: "info",
+                            text: "¡Sin Registros!",
                     });
                 }
             });
@@ -390,8 +390,8 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
-                          icon: "error",
-                          text: "¡Error cargando informacion!",
+                            icon: "error",
+                            text: "¡Error cargando informacion!",
                     });
                     }
                 });
@@ -416,8 +416,8 @@
                     dataType: 'json', 
                     success: function(registros) {
                         Swal.fire({
-                              icon: "success",
-                              text: "¡Se inicio la actividad!",
+                                icon: "success",
+                                text: "¡Se inicio la actividad!",
                         });
                         $('#modalNuevaA').modal('hide');
                         
@@ -429,8 +429,8 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
-                              icon: "error",
-                              text: "¡Error procesando la solicitud!",
+                            icon: "error",
+                            text: "¡Error procesando la solicitud!",
                         });
                     }
                 });
@@ -444,22 +444,22 @@
             ot = $('#otServicio').val();
             
             Swal.fire({
-              title: "¿Desea finalizar la actividad?",
-              showDenyButton: true,
-              confirmButtonText: "Finalizar",
-              denyButtonText: `Cancelar`
+                title: "¿Desea finalizar la actividad?",
+                showDenyButton: true,
+                confirmButtonText: "Finalizar",
+                denyButtonText: `Cancelar`
             }).then((result) => {
-              if (result.isConfirmed) {
-                  
-                 $.ajax({
+            if (result.isConfirmed) {
+
+                $.ajax({
                     url: 'acciones_servicios_autorizados.php',
                     method: 'POST',
                     dataType: 'json',
                     data:{accion, idActividad, idServicio, coordenadas},
                     success: function(data) {
                         Swal.fire({
-                              icon: "success",
-                              text: "¡Se proceso tu solicitud con éxito!",
+                            icon: "success",
+                            text: "¡Se proceso tu solicitud con éxito!",
                         });
                         $("#btnNuevaActividad").show();
                         validarEstatus(idServicio, ot);
@@ -469,15 +469,15 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
-                              icon: "error",
-                              text: "¡No se pudo finalizar la actividad!",
+                            icon: "error",
+                            text: "¡No se pudo finalizar la actividad!",
                         });
                         
                     }
                 });
-              } else if (result.isDenied) {
+            } else if (result.isDenied) {
                 //Swal.fire("Changes are not saved", "", "info");
-              }
+            }
             });
         }
         
@@ -489,42 +489,42 @@
             ot = $('#otServicio').val();
             
             Swal.fire({
-              title: "¿Desea cerrar el servicio?",
-              showDenyButton: true,
-              confirmButtonText: "Finalizar",
-              denyButtonText: `Cancelar`
+                title: "¿Desea cerrar el servicio?",
+                showDenyButton: true,
+                confirmButtonText: "Finalizar",
+                denyButtonText: `Cancelar`
             }).then((result) => {
-              if (result.isConfirmed) {
-                  
-                 $.ajax({
-                    url: 'acciones_servicios_autorizados.php',
-                    method: 'POST',
-                    dataType: 'json',
-                    data:{accion, idActividad, idServicio, coordenadas},
-                    success: function(data) {
-                        Swal.fire({
-                              icon: "success",
-                              text: "¡Se proceso tu solicitud con éxito!",
-                        });
-                        $("#btnNuevaActividad").hide();
-                        $("#btnFinActividad").hide();
-                        $("#btnCerrarServicio").hide();
-                        $("#btnVerActividades").hide();
-                        
-                        validarEstatus(idServicio, ot);
-                        verServiciosAutorizados();
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Swal.fire({
-                              icon: "error",
-                              text: "¡No se pudo cerrar el servicio!",
-                        });
-                        
-                    }
-                });
-                
-              } else if (result.isDenied) {
-              }
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: 'acciones_servicios_autorizados.php',
+                        method: 'POST',
+                        dataType: 'json',
+                        data:{accion, idActividad, idServicio, coordenadas},
+                        success: function(data) {
+                            Swal.fire({
+                                icon: "success",
+                                text: "¡Se proceso tu solicitud con éxito!",
+                            });
+                            $("#btnNuevaActividad").hide();
+                            $("#btnFinActividad").hide();
+                            $("#btnCerrarServicio").hide();
+                            $("#btnVerActividades").hide();
+                            
+                            validarEstatus(idServicio, ot);
+                            verServiciosAutorizados();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            Swal.fire({
+                                icon: "error",
+                                text: "¡No se pudo cerrar el servicio!",
+                            });
+                            
+                        }
+                    });
+                    
+                } else if (result.isDenied) {
+                }
             });
         }
 /* *********************************************************************** */

@@ -11,9 +11,9 @@
     $sqlCorreo = "SELECT correo 
                     FROM usuarios 
                     WHERE noEmpleado = (SELECT jefe FROM usuarios WHERE noEmpleado = '$id_usuario')";
-                    echo $sqlCorreo; 
+                    //echo $sqlCorreo; 
     $resCorreo = $conn->query($sqlCorreo);
-       
+    
         while ($rowCorreo = $resCorreo->fetch_assoc()) {
                 $correo = $rowCorreo["correo"];
         }
@@ -97,7 +97,7 @@
         echo "Mailer Error: " . $mail->ErrorInfo;
         } 
         else{
-         ?>
+        ?>
             <div style="color: #155724;
             background-color: #d4edda;
             border-color: #c3e6cb;
@@ -110,7 +110,7 @@
             Mensaje Enviado
             </div>
         <?php
-          header("location: https://messbook.com.mx/horasextra/");
+        header("location: https://messbook.com.mx/horasextra/");
         }
     echo json_encode(true);
 ?>
