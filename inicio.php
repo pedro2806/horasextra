@@ -321,13 +321,15 @@
                                 if (noEmpleado == 521) {
                                     if (Registro.autoriza_gerencia == "Por Autorizar") {
                                         BotonesG = `<button class="btn btn-success btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Autorizado')"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-danger btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;
-                                        
+                                            <button class="btn btn-danger btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;                                        
+                                    }
+                                    else{
+                                        BotonesG = `<span class="badge text-bg-success">Autorizo Gcia</span>`;
                                     }
                                     if (Registro.autoriza_jefe == "Por Autorizar") {
                                         Botones = `<span class="badge text-bg-warning">Validando</span>`;
                                     }else{
-                                        Botones = `<span class="badge text-bg-success">Autorizado</span>`;
+                                        Botones = `<span class="badge text-bg-success">Autorizo Jefe</span>`;
                                     }
                                 } else {
                                     if (Registro.autoriza_jefe == "Por Autorizar") {
@@ -339,7 +341,7 @@
                                     if (Registro.autoriza_gerencia == "Por Autorizar") {
                                         BotonesG = `<span class="badge text-bg-warning">Validando Gcia</span>`;
                                     }else{
-                                        BotonesG = `<span class="badge text-bg-success">Autorizado Gcia</span>`;
+                                        BotonesG = `<span class="badge text-bg-success">Autorizo Gcia</span>`;
                                     }                                    
                                 }
                             }
