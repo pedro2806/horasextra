@@ -59,16 +59,28 @@
             </li>
     <?php 
         }
+    
+    
+    if ($_COOKIE['rol'] == 2 || $_COOKIE['noEmpleado'] == 521) {
     ?>
-            <!---------------------------------->
-   
+            <!----------------MENU 1------------------->
             <li class = "nav-item">
-                <a class = "nav-link collapsed" href = "servicios_autorizados" data-toggle = "collapse" data-target = "#collapseThree" aria-expanded = "true" aria-controls = "collapseThree">
-                    <i class = "fas fa-fw fa-check"></i> <span>Mis Servicios</span>
+                <a class = "nav-link collapsed" href = "SeguimientoServicios" data-toggle = "collapse" data-target = "#collapseTwo" aria-expanded = "true" aria-controls = "collapseTwo">
+                    <i class = "fas fa-fw fa-clock"></i>
+                    <span>Seguimiento Hrs</span>
                 </a>
             </li>
-            <!----------------------------------->
-   
+    <?php 
+        }
+    ?>
+
+    <li class = "nav-item">
+        <a class = "nav-link collapsed" href = "servicios_autorizados" data-toggle = "collapse" data-target = "#collapseThree" aria-expanded = "true" aria-controls = "collapseThree">
+            <i class = "fas fa-fw fa-check"></i> <span>Mis Servicios</span>
+        </a>
+    </li>
+    <!----------------------------------->
+
     <!-- Modal HTML -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -117,7 +129,7 @@
         
         // Verifica el tiempo restante y muestra el modal si es necesario
         function checkCookieExpiry() {
-            var cookieExpiry = localStorage.getItem('nombredelusuario');
+            var cookieExpiry = localStorage.getItem('nombre');
             if (cookieExpiry) {
                 var currentTime = new Date().getTime();
                 var expiryTime = parseInt(cookieExpiry, 1000);
