@@ -26,7 +26,11 @@
     <li class = "nav-item dropdown no-arrow">
         <a class = "nav-link dropdown-toggle" href = "#" id = "userDropdown" role = "button" data-toggle = "dropdown" aria-haspopup = "true" aria-expanded = "false">            
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <span class = "mr-2 d-none d-sm-inline text-gray-600"><?php echo $_COOKIE['nombre'];?> &nbsp; &nbsp;</span>
+=======
+            <span class = "mr-2 d-none d-sm-inline text-gray-600"><?php echo $_COOKIE['nombredelusuario']; ?> &nbsp; &nbsp;</span>
+>>>>>>> Stashed changes
 =======
             <span class = "mr-2 d-none d-sm-inline text-gray-600"><?php echo $_COOKIE['nombredelusuario']; ?> &nbsp; &nbsp;</span>
 >>>>>>> Stashed changes
