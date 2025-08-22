@@ -1,14 +1,23 @@
 <?php
     session_start();
     include 'conn.php';
-    if ($_COOKIE['nombre'] == '') {
-        echo $_COOKIE['nombredelusuario'];
-        echo '<script>window.location.assign("index")</script>';
+
+    // Validar sesión o levantarla desde cookies
+    if (!isset($_SESSION['nombredelusuario']) && isset($_COOKIE['nombredelusuario'])) {
+        $_SESSION['nombredelusuario'] = $_COOKIE['nombredelusuario'];
+        $_SESSION['noEmpleado'] = $_COOKIE['noEmpleado'] ?? '';
+        $_SESSION['rol'] = $_COOKIE['rol'] ?? '';
+        $_SESSION['correo'] = $_COOKIE['correo'] ?? '';
+    }
+
+    // Si no hay sesión ni cookies, redirige al login
+    if (!isset($_SESSION['nombredelusuario']) || empty($_SESSION['nombredelusuario'])) {
+        header('Location: index');
+        exit();
     }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -145,7 +154,7 @@
                                             <tr class="table-primary">
                                                 <th>Fecha/OT</th>
                                                 <th>Ing</th>
-                                                <th>T. Serv</th>
+                                                <th>T. Servicio</th>
                                                 <th> </th>
                                             </tr>
                                         </thead>
@@ -201,7 +210,7 @@
                     }
                 }
             });
-            $('#tablaSinAutorizar').css('font-size', '11px');
+            $('#tablaSinAutorizar').css('font-size', '12px');
             
             // Cuando cualquier botón con "data-bs-toggle=collapse" sea clickeado
             $('[data-bs-toggle="collapse"]').on('click', function () {
@@ -232,8 +241,8 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
-                            icon: "error",
-                            text: "!No se pudieron cargar las areas!",
+                          icon: "error",
+                          text: "!No se pudieron cargar las areas!",
                         });
                         
                     }
@@ -267,8 +276,8 @@
                     success: function(data) {
                         
                         Swal.fire({
-                            icon: "success",
-                            text: "Se proceso con exito.",
+                              icon: "success",
+                              text: "Se proceso con exito.",
                         });
                         llenaTablaSinAuto();
                         limpiarFormulario(); 
@@ -279,8 +288,8 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
-                            icon: "info",
-                            text: "!Atención! Tu servicio no se pudo procesar.",
+                              icon: "info",
+                              text: "!Atención! Tu servicio no se pudo procesar.",
                         });
                         
                     }
@@ -302,7 +311,6 @@
         //Llena Tabla "Sin Autorizar"
         function llenaTablaSinAuto(){
             rolUsuario = <?php echo $_COOKIE["rol"]; ?>;
-            noEmpleado = <?php echo $_COOKIE["noEmpleado"]; ?>; 
             
             $.ajax({
                     url: 'acciones_inicio.php',
@@ -315,61 +323,27 @@
                         table.clear().draw();
                         
                         registros2.forEach(function(Registro) {
-                            BotonesG = '';
-                            Botones = '';
+                            
                             if (rolUsuario == 2 || rolUsuario == 3 || rolUsuario == 4) {
-                                if (noEmpleado == 521) {
-                                    if (Registro.autoriza_gerencia == "Por Autorizar") {
-                                        BotonesG = `<button class="btn btn-success btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Autorizado')"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-danger btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;                                        
-                                    }
-                                    else{
-                                        BotonesG = `<span class="badge text-bg-success">Autorizo Gcia</span>`;
-                                    }
-                                    if (Registro.autoriza_jefe == "Por Autorizar") {
-                                        Botones = `<span class="badge text-bg-warning">Validando</span>`;
-                                    }else{
-                                        Botones = `<span class="badge text-bg-success">Autorizo Jefe</span>`;
-                                    }
-                                } else {
-                                    if (Registro.autoriza_jefe == "Por Autorizar") {
-                                        Botones = `<button class="btn btn-primary btn-sm" onclick="autorizarServicio(${Registro.id}, 'Autorizado')"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-danger btn-sm" onclick="autorizarServicio(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;
-                                    }else{
-                                        Botones = `<span class="badge text-bg-success">Autorizado</span>`;
-                                    }
-                                    if (Registro.autoriza_gerencia == "Por Autorizar") {
-                                        BotonesG = `<span class="badge text-bg-warning">Validando Gcia</span>`;
-                                    }else{
-                                        BotonesG = `<span class="badge text-bg-success">Autorizo Gcia</span>`;
-                                    }                                    
-                                }
+                            Botones = `<button class="btn btn-primary btn-sm" onclick="autorizarServicio(${Registro.id}, 'Autorizado')"><i class="fa fa-check"></i></button>
+                                       <button class="btn btn-danger btn-sm" onclick="autorizarServicio(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;
                             }
-                            else{                                
-                                if (Registro.autoriza_jefe == "Por Autorizar") {
-                                    Botones = `<span class="badge text-bg-warning">Validando</span>`;
-                                }else{
-                                    Botones = `<span class="badge text-bg-success">Autorizado</span>`;
-                                }
-                                if (Registro.autoriza_gerencia == "Por Autorizar") {
-                                    BotonesG = `<span class="badge text-bg-warning">Validando Gcia</span>`;
-                                }else{
-                                    BotonesG = `<span class="badge text-bg-success">Autorizado Gcia</span>`;
-                                }                                    
+                            else{
+                                Botones = `<span class="badge text-bg-warning">Validando</span>`;
                             }
                             
                             table.row.add([
                                 Registro.fecha_creacion + `<br>`+ Registro.ot,
                                 Registro.ingeniero,
                                 Registro.tipo_s,
-                                Botones + BotonesG, //`<button class="btn btn-info btn-sm" onclick="autorizarServicio(${Registro.id})">Validar</button>`,
+                                Botones, //`<button class="btn btn-info btn-sm" onclick="autorizarServicio(${Registro.id})">Validar</button>`,
                                 ]).draw(false);
                         });
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
-                            icon: "info",
-                            text: "!No hay servicios pendientes por autorizar!",
+                          icon: "info",
+                          text: "!No hay servicios pendientes por autorizar!",
                         });
                     }
                 });
@@ -396,44 +370,6 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {accion: 'autorizarServicio', idServicio, estatus},
-                        success: function(response) {
-                            Swal.fire("Servicio " + estatus + " con éxito");
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            Swal.fire({
-                                icon: "success",
-                                text: "¡Se " + estatusText + " el servicio!",
-                            });
-                        }
-                    });
-                    llenaTablaSinAuto();
-                } else if (result.isDenied) {
-                    Swal.fire("Cambios no guardados", "");
-                }
-            });
-        }
-
-        function autorizarServicioG(idServicio, estatus) {
-            var estatusText = ''
-            if(estatus == 'Autorizado'){
-                estatusText = 'Autorizo';
-            }else{
-                estatusText = 'Rechazo';
-            }
-            
-            Swal.fire({
-                title: "¿" + estatusText + " Servicio?",
-                showDenyButton: true,
-                confirmButtonText: estatusText,
-                icon: "question",
-                denyButtonText: "Cerrar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'acciones_inicio.php',
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {accion: 'autorizarServicioG', idServicio, estatus},
                         success: function(response) {
                             Swal.fire("Servicio " + estatus + " con éxito");
                         },

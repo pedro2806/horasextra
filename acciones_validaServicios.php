@@ -69,62 +69,9 @@ $idServicio = $_POST["idServicio"];
         }
         echo json_encode($registros);
     }
-
-    if ($accion == 'verServiciosTodos'){
-        $ingeniero = isset($_POST['ing']) ? $_POST['ing'] : '';
-
-        $sqlllenaTablaActividades = "SELECT s.*, u.nombre, (SELECT ROUND(SUM(duracion), 2) FROM tiempo_actividad where id_servicio = s.id) AS tiempo,
-                                    (SELECT descDatamart FROM area WHERE clave = s.area ) as areaD
-                                    FROM servicio s 
-                                    INNER JOIN usuarios u ON s.id_usuario = u.noEmpleado
-                                    WHERE s.estatus = 'cerrado' AND s.fecha_creacion >= DATE_SUB(NOW(), INTERVAL 2 MONTH)";
-        $whereClauses = [];
-        $params = [];
-        $param_types = "";       // Inicialmente vacÃ­o, solo se agrega si hay parÃ¡metros
-        
-    // Manejo del ingeniero
-        if (!empty($ingeniero)) {
-            $whereClauses[] = "u.nombre LIKE ?";
-            $params[] = "%" . $ingeniero . "%"; // AÃ±ade comodines para LIKE
-            $param_types .= "s"; // El ingeniero es un string
-        }
-
-        if (!empty($whereClauses)) {
-            $sqlllenaTablaActividades .= " AND " . implode(' AND ', $whereClauses);
-        }
-
-        //echo $sqlllenaTablaActividades.'-'.$params;
-        // Preparar la consulta
-        if ($stmt = $conn->prepare($sqlllenaTablaActividades)) {
-            // Enlazar los parÃ¡metros dinÃ¡micamente solo si existen
-            if (!empty($params)) {
-                $stmt->bind_param($param_types, ...$params);
-            }
-
-            // Ejecutar la consulta
-            $stmt->execute();
-
-            // Obtener el resultado
-            $result = $stmt->get_result();
-
-            if ($result && $result->num_rows > 0) {
-                $registros = [];
-                while ($row = $result->fetch_assoc()) {
-                    $registros[] = $row;
-                }
-                echo json_encode($registros);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'No se encontraron actividades planeadas o error en la consulta.']);
-            }
-
-            $stmt->close(); // Cerrar el statement
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error al preparar la consulta: ' . $conn->error]);
-        }
-    }
     
 //LLENA TABLA SERVICIOS AUTORIZADOS
-    
+       
     if ($accion == 'verServiciosValidados'){
         
         $sqlllenaTablaActividades = "SELECT s.*, u.nombre, (SELECT ROUND(SUM(duracion), 2) FROM tiempo_actividad where id_servicio = s.id AND estatus_gral = 'Autorizado') AS tiempo,
@@ -157,8 +104,8 @@ $idServicio = $_POST["idServicio"];
 //Llenar Tabla Actividades
     if ($accion == 'llenaTablaActividades'){
         $sqlllenaTablaActividades = "SELECT id, id_servicio, tipo, DATE_FORMAT(fecha_inicio, '%d-%m-%y %H:%i') as fecha_inicio, DATE_FORMAT(fecha_fin, '%d-%m-%y %H:%i') as fecha_fin, duracion, comentarios
-                                        FROM tiempo_actividad WHERE estatus = 'Finalizado'  AND id_servicio = $idServicio AND estatus_gral = 'Por autorizar'
-                                        ORDER BY fecha_inicio DESC";
+                                     FROM tiempo_actividad WHERE estatus = 'Finalizado'  AND id_servicio = $idServicio AND estatus_gral = 'Por autorizar'
+                                     ORDER BY fecha_inicio DESC";
             
         $resllenaTablaActividades = mysqli_query($conn, $sqlllenaTablaActividades);
         
@@ -180,11 +127,11 @@ $idServicio = $_POST["idServicio"];
         
     }
     
-    if ($accion == 'llenaTodasActividades'){
-        $sqlllenaTablaActividadesAuto = "SELECT id, id_servicio, tipo, DATE_FORMAT(fecha_inicio, '%d-%m-%y %H:%i') as fecha_inicio, DATE_FORMAT(fecha_fin, '%d-%m-%y %H:%i') as fecha_fin, duracion, comentarios
-                                            FROM tiempo_actividad WHERE estatus = 'Finalizado'  AND id_servicio = $idServicio
-                                            ORDER BY fecha_inicio DESC";
-                                    
+    if ($accion == 'llenaTablaActividadesAuto'){
+        $sqlllenaTablaActividadesAuto = "SELECT id, id_servicio, tipo, DATE_FORMAT(fecha_inicio, '%d-%m-%y %H:%i') as fecha_inicio, DATE_FORMAT(fecha_fin, '%d-%m-%y %H:%i') as fecha_fin, duracion 
+                                     FROM tiempo_actividad WHERE estatus = 'Finalizado'  AND id_servicio = $idServicio AND estatus_gral = 'Autorizado'
+                                     ORDER BY fecha_inicio DESC";
+                                     
         $resllenaTablaActividadesAuto = $conn->query($sqlllenaTablaActividadesAuto);
 
         $registroAuto = [];
@@ -195,8 +142,7 @@ $idServicio = $_POST["idServicio"];
                 'fecha_fin' => $rowlllenaTablaActividadesAuto["fecha_fin"],
                 'duracion' => $rowlllenaTablaActividadesAuto["duracion"],
                 'id' => $rowlllenaTablaActividadesAuto["id"],
-                'id_servicio' => $rowlllenaTablaActividadesAuto["id_servicio"],
-                'comentarios' => $rowlllenaTablaActividadesAuto["comentarios"]
+                'id_servicio' => $rowlllenaTablaActividadesAuto["id_servicio"]
             );
         }
         echo json_encode($registroAuto);
@@ -209,10 +155,10 @@ $idServicio = $_POST["idServicio"];
             
             // Ejecutar la consulta
             if ($resultados = $conn->query($sqlvalidarActividades)) {
-                // Para depuraciï¿½ï¿½n, elimina este echo en producciï¿½ï¿½n
+                // Para depuraci¨®n, elimina este echo en producci¨®n
                 echo json_encode(['success' => true]);
             } else {
-                // En caso de error, devolver el mensaje de error especï¿½ï¿½fico
+                // En caso de error, devolver el mensaje de error espec¨ªfico
                 echo json_encode(['error' => true, 'message' => mysqli_error($conn)]);
             }
     }
@@ -224,10 +170,10 @@ $idServicio = $_POST["idServicio"];
             
             // Ejecutar la consulta
             if ($resultados = $conn->query($sqlvalidarActividad)) {
-                // Para depuraciï¿½ï¿½n, elimina este echo en producciï¿½ï¿½n
+                // Para depuraci¨®n, elimina este echo en producci¨®n
                 echo json_encode(['success' => true]);
             } else {
-                // En caso de error, devolver el mensaje de error especï¿½ï¿½fico
+                // En caso de error, devolver el mensaje de error espec¨ªfico
                 echo json_encode(['error' => true, 'message' => mysqli_error($conn)]);
             }
     }    

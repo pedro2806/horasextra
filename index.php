@@ -83,8 +83,8 @@
 
     <?php
     
-        //session_start();
-        if(isset($_SESSION['usuario']))
+        session_start();
+        if(isset($_SESSION['nombredelusuario']))
         {
             header('location: inicio');
         }
@@ -101,11 +101,11 @@
             
             //Se cambio usuario x correo para poder acceder 19/03/2025 Sebas
             $QUsuarios  =  "SELECT  * FROM usuarios WHERE correo='".$usuario."@mess.com.mx' and password='".$pass."'";
-            $resultado = $conn->query($QUsuarios);
-            
-            if ($resultado->num_rows > 0) {
+            $resultado =  mysqli_query($conn, $QUsuarios);
+
+            if (mysqli_num_rows($resultado) > 0) {
                 // Recorrer resultados
-                while($row2 = $resultado->fetch_assoc()) {
+                while($row2 = mysqli_fetch_assoc($resultado)) {
                     $nombre = $row2["nombre"];
                     $nombreEmpleado = $row2["usuario"];
                     $noEmpleado = $row2["noEmpleado"];
@@ -136,27 +136,6 @@
                 $area = utf8_encode($row2["departamento"]);
                 $rol = utf8_encode($row2["rol"]);
             }
-    
-            if($nr == 1)
-            {   
-                //Define el tiempo de expiracion (3 minutos)
-                $expiryTime = date('D, d M Y H:i:s \G\M\T', time() + 172800000);
-                
-                echo '<script>document.cookie = "nombre='.$nombre.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "region='.$region.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "noEmpleado='.$noEmpleado.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "area='.$area.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "rol='.$rol.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>window.location.assign("inicio")</script>';
-                
-            }
-            else if ($nr  ==  0)
-            {
-                echo '<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>';
-                echo '<script>swal("Usuario o contraseña incorrectos! ", "Vuelve a intentar!", "error");</script>';
-                
-            }
-            
         }
     ?>
     
