@@ -11,7 +11,7 @@ $rol = isset($_POST['rolHR']) ? $_POST['rolHR'] : '';
 $usuario = isset($_POST['correoHR']) ? $_POST['correoHR'] : '';
 
 
-    $Qempresas  =  "SELECT  *, TIMESTAMPDIFF(YEAR,fechaIngreso,CURDATE()) AS antiguedad, rol FROM usuarios WHERE usuario  = '".$usuario."' AND estatus = 1";
+    $Qempresas  =  "SELECT  *, TIMESTAMPDIFF(YEAR,fechaIngreso,CURDATE()) AS antiguedad, rol, departamento FROM usuarios WHERE usuario  = '".$usuario."' AND estatus = 1";
     $res2 =  mysqli_query( $conn, $Qempresas ) or die (mysqli_error($conn));
     $nr = mysqli_num_rows($res2);
 
@@ -22,6 +22,7 @@ $usuario = isset($_POST['correoHR']) ? $_POST['correoHR'] : '';
         $antiguedad = $row2["antiguedad"];
         $diasD = $row2["diasdisponibles"];
         $rol = $row2["rol"];
+        $area = $row2["departamento"];
     }
 
     if($nr == 1){
