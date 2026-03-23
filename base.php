@@ -125,7 +125,7 @@
         $(document).ready(function () {
             
         });
-    
+        ///AQUI VA LA LOGICA PARA INSERTS Y MODIFICACIONES DE LOS PENDIENTES - TODO CON AJAX
     </script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" defer="defer"></script>

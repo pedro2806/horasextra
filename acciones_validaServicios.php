@@ -204,8 +204,8 @@ $idServicio = $_POST["idServicio"];
 
     if ($accion == 'llenaTablaActividadesAuto'){
         $sqlllenaTablaActividadesAuto = "SELECT id, id_servicio, tipo, DATE_FORMAT(fecha_inicio, '%d-%m-%y %H:%i') as fecha_inicio, DATE_FORMAT(fecha_fin, '%d-%m-%y %H:%i') as fecha_fin, duracion, comentarios 
-                                     FROM tiempo_actividad WHERE estatus = 'Finalizado'  AND id_servicio = $idServicio AND estatus_gral = 'Autorizado'
-                                     ORDER BY fecha_inicio DESC";
+                                    FROM tiempo_actividad WHERE estatus = 'Finalizado'  AND id_servicio = $idServicio AND estatus_gral = 'Autorizado'
+                                    ORDER BY fecha_inicio DESC";
                                     
         $resllenaTablaActividadesAuto = $conn->query($sqlllenaTablaActividadesAuto);
 

@@ -26,7 +26,7 @@ $estatus = $_POST["estatus"];
 
     if($accion == 'nuevoServicio'){
         //USUARIOS MT 123, 204, 310, 329, 397, 414, 415, 424, 432, 440, 464, 472, 485, 490, 509, 442, 472,532
-        $mt_users = array(123, 204, 310, 329, 397, 414, 415, 424, 432, 440, 464, 472, 485, 490, 509, 442, 532,107, 398, 556);
+        $mt_users = array(123, 204, 310, 329, 397, 414, 415, 424, 432, 440, 464, 472, 485, 490, 509, 442, 532,107, 398, 556, 566);
 
         if (in_array($id_usuario, $mt_users)) {
             $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia) 
