@@ -182,7 +182,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-    
+    <!-- Funciones Globales -->
+    <script src="../loginMaster/funcionesGlobales.js"></script>
+
     <script type="text/javascript">
     
         $(document).ready(function () {
@@ -212,8 +214,8 @@
                 var target = $(this).data('bs-target');
                 $(target).collapse('show');
             });
-        });
-        
+
+        });        
         //AREA
         function muestraDepto(){
             var accion = "verDepto";
@@ -240,7 +242,7 @@
                 });
         }
         
-        function nuevoServicio(){
+        async function nuevoServicio(){
             const form = document.querySelector("#form"); // Obtener el formulario
             if (!form.checkValidity()) {  // Verificar si el formulario es válido
                 Swal.fire({
@@ -248,8 +250,20 @@
                     text: "Por favor, completa todos los campos requeridos.",
                 });
                 return;  // No continuar con el envío si el formulario no es válido
-            }
+            }  
+            
+            const datosGerencia = await verificarGerencia(); 
     
+            if (datosGerencia) {
+                cuantos = datosGerencia.cuantos;
+                inf_adicional = datosGerencia.inf_adicional;
+                console.log('Acceso concedido:', cuantos, inf_adicional);
+            } else {
+                cuantos = 0;
+                inf_adicional = '';
+                console.log('Sin acceso de gerencia');
+            }
+            
             accion = "nuevoServicio";
             coordenadas = $('#coordenadas').val();
             comentarios = $('#comentarios').val();
@@ -263,7 +277,7 @@
                     url: 'acciones_inicio.php',
                     method: 'POST',
                     dataType: 'json',
-                    data:{accion, area, tipo_servicio, tipo_actividad, comentarios, coordenadas, ot, ov},
+                    data:{accion, area, tipo_servicio, tipo_actividad, comentarios, coordenadas, ot, ov, cuantos, inf_adicional},
                     success: function(data) {
                         
                         Swal.fire({
@@ -493,6 +507,29 @@
                 case error.UNKNOWN_ERROR:
                     alert("Ocurrió un error desconocido.");
                     break;
+            }
+        }
+
+        async function verificarGerencia() {
+            try {
+                // 1. Esperamos la respuesta
+                const respuesta = await validaOpcionesSistema('hrsExtra', 'autorizaGerencia');
+                
+                // 2. Usamos Optional Chaining (?.) para evitar errores si data no existe
+                const data = respuesta?.data?.[0];
+                const cuantos = data ? parseInt(data.cuantos) : 0;
+
+                alert('Cuantos: ' + cuantos);
+
+                if (cuantos <= 0) {            
+                    return null; // Es más claro devolver null que undefined
+                } else {            
+                    // Devolvemos el objeto completo (cuantos e inf_adicional)
+                    return data;
+                }
+            } catch (error) {
+                //console.error("Error en verificarGerencia:", error);
+                return null;
             }
         }
     </script>

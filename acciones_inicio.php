@@ -25,8 +25,12 @@ $estatus = $_POST["estatus"];
 //FUNCION PARA AGREGAR NUEVO SERVICIO
 
     if($accion == 'nuevoServicio'){
-        //USUARIOS MT 123, 204, 310, 329, 397, 414, 415, 424, 432, 440, 464, 472, 485, 490, 509, 442, 472,532
-        $mt_users = array(123, 204, 310, 329, 397, 414, 415, 424, 432, 440, 464, 472, 485, 490, 509, 442, 532,107, 398, 556, 566, 571);
+
+        $cuantos = $_POST["cuantos"];
+        $inf_adicional = $_POST["inf_adicional"];
+        //USUARIOS MT 
+        $mt_users = explode(",", $inf_adicional);
+        $mt_users = array_map('trim', $mt_users);
 
         if (in_array($id_usuario, $mt_users)) {
             $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia) 
@@ -35,8 +39,7 @@ $estatus = $_POST["estatus"];
             $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia) 
                             VALUES ('$id_usuario', '$tipo_servicio', '$ov', '$ot', 'En proceso','$fecha_inicio', '$area', 'Por Autorizar', 0, '$comentarios', 'Por Autorizar')";
         }
-        
-                                                                                                                                                    
+                                                                                                                                                            
         $ResNuevoServicio = $conn->query($sqlNuevoServicio);
         
         $exito = array();
@@ -77,7 +80,7 @@ $estatus = $_POST["estatus"];
             $sqlllenaTablaSinAuto = "SELECT id, ot, ov, tipo_s, autoriza_jefe, DATE_FORMAT(fecha_creacion, '%d/%m/%Y') AS fecha_creacion, comentarios, (SELECT nombre FROM usuarios WHERE noEmpleado = S.id_usuario) as ingeniero,
                                     autoriza_gerencia
                                     FROM servicio S
-                                    WHERE S.id_usuario = $id_usuario AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar'";
+                                    WHERE S.id_usuario = $id_usuario AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion";
         }
         
         if($_COOKIE['rol'] == 2 || $_COOKIE['rol'] == 4){
@@ -86,7 +89,7 @@ $estatus = $_POST["estatus"];
                                     S.autoriza_gerencia
                                     FROM servicio S
                                     INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
-                                    WHERE U.departamento = $area AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar'";
+                                    WHERE U.departamento = $area AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion";
         }
         if($_COOKIE['rol'] == 3 && $_COOKIE['noEmpleado'] == 521){
             $area = $_COOKIE['area'];
@@ -94,7 +97,7 @@ $estatus = $_POST["estatus"];
                                     S.autoriza_gerencia
                                     FROM servicio S
                                     INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
-                                    WHERE autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar'";
+                                    WHERE autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion";
         }
         
         $resllenaTablaSinAuto = $conn->query($sqlllenaTablaSinAuto);
