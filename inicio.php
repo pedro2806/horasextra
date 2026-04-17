@@ -519,7 +519,7 @@
                 const data = respuesta?.data?.[0];
                 const cuantos = data ? parseInt(data.cuantos) : 0;
 
-                alert('Cuantos: ' + cuantos);
+                //alert('Cuantos: ' + cuantos);
 
                 if (cuantos <= 0) {            
                     return null; // Es más claro devolver null que undefined
