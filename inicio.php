@@ -79,83 +79,114 @@
                     </center>
                     
                     <!-- FORMULARIO INICIO SERVICIO -->
-                    <div id ="collapseFormularioInicio" name ="collapseFormularioInicio" class="collapse">
-                        <div class="card border-left-success shadow h-60 py-0 py-0">
-                            <div class="card card-header">
-                                Servicio Nuevo
+                    <div id="collapseFormularioInicio" name="collapseFormularioInicio" class="collapse mb-3">
+                        <div class="card border-start border-success border-2 shadow-sm">
+                            <div class="card-header bg-transparent py-2 fs-6 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">Servicio Nuevo</span>
+                                <span id="totalHorasBadge" class="badge bg-secondary">Total: 0 hrs</span>
                             </div>
-                            <div class="card card-body">
+                            <div class="card-body p-2.5">
                                 <form id="form" name="form">
-                                    <div class="row">
-                                        <div class="col-12 col-md-3 col-sm-6 mb-3 d-flex align-items-center">
-                                            <label for="ot" class="mr-2">OT</label>
-                                            <input type="text" id="ot" name="ot" class="form-control" required>
+                                    <div class="row g-2">
+                                        
+                                        <div class="col-12 col-sm-6">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-light text-secondary fw-semibold" style="width: 75px; justify-content: center;">Ejecución</span>
+                                                <input type="date" id="fecha_ejecucion" name="fecha_ejecucion" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                            </div>
                                         </div>
-                                        <div class="col-12 col-md-3 col-sm-6 mb-3 d-flex align-items-center">
-                                            <label for="ov" class="mr-2">OV</label>
-                                            <input type="text" id="ov" name="ov" class="form-control" required>
+
+                                        <div class="col-12 col-sm-6">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-light text-secondary fw-semibold" style="width: 75px; justify-content: center;">Tipo</span>
+                                                <select id="tipo_servicio" name="tipo_servicio" class="form-select" required>
+                                                    <option value="">Selecciona...</option>
+                                                    <option value="Externo">Externo</option>
+                                                    <option value="Interno">Interno</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-12 col-md-3 col-sm-6 mb-3 d-flex align-items-center">
-                                            <label for="area" class="mr-2">Área</label>
-                                            <select id="area" name="area" class="form-select" required>
-                                                <option value="">Selecciona...</option>
-                                            </select>
+
+                                        <input type="hidden" id="ov" name="ov" value="">
+
+                                        <div class="col-12 mt-3">
+                                            <div class="bg-light p-2 rounded border">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <small class="fw-bold text-secondary text-uppercase" style="font-size: 0.75rem;">Desglose de Actividades</small>
+                                                    <button type="button" class="btn btn-outline-success btn-xs py-0 px-2" style="font-size: 0.75rem;" onclick="agregarRenglonDinamico()">
+                                                        <i class="bi bi-plus-circle"></i> + Agregar Renglón
+                                                    </button>
+                                                </div>
+                                                
+                                                <div id="contenedorDinamico">
+                                                    <div class="row g-1 mb-2 alineacion-renglon align-items-center">
+                                                        <div class="col-5">
+                                                            <select name="area[]" class="form-select form-select-sm" required>
+                                                                <option value="">Área...</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <input type="text" name="ot[]" class="form-control form-control-sm" placeholder="OT" required>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input type="number" name="tiempo[]" class="form-control form-control-sm campo-tiempo" placeholder="Hrs" min="0.1" max="4" step="0.1" onchange="calcularTotalHoras()" required>
+                                                        </div>
+                                                        <div class="col-1 text-center">
+                                                            <button type="button" class="btn btn-sm text-danger p-0" onclick="eliminarRenglonDinamico(this)" disabled>
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-12 col-md-3 col-sm-6 mb-0">
-                                            <label for="tipo_servicio" class="mr-2">Tipo de Servicio</label>
-                                            <select id="tipo_servicio" name="tipo_servicio" class="form-select" required>
-                                                <option value="">Selecciona...</option>
-                                                <option value="Externo">Externo</option>
-                                                <option value="Interno">Interno</option>
-                                            </select>
+                                        
+                                        <div class="col-12 mt-2">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-light text-secondary fw-semibold d-none d-sm-flex" style="width: 75px; justify-content: center;">Obs.</span>
+                                                <textarea id="comentarios" name="comentarios" rows="1" class="form-control" placeholder="Comentarios u observaciones..."></textarea>
+                                            </div>
+                                            <input type="hidden" id="coordenadas" name="coordenadas">
                                         </div>
-                                        <div class="col-12 col-md-9 col-sm-6 mb-0">
-                                            <label for="comentarios">Comentarios</label>
-                                            <textarea id="comentarios" name="comentarios" rows="2" class="form-control"></textarea>
-                                            <input type="hidden" id="coordenadas" name="coordenadas" class="form-control">
-                                        </div>
+                                    </div>
+                                    
+                                    <input id="accion" name="accion" type="hidden" value="nuevo">
+                                    
+                                    <div class="text-center mt-3">
+                                        <button type="button" class="btn btn-success btn-sm px-5 shadow-sm fw-semibold" id="Confirmar" onClick="validarYEnviar()">
+                                            Confirmar Registro
+                                        </button>
                                     </div>
                                 </form>
-                                <hr>
-                                <!--HIDDEN-->
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <input id="accion" name="accion" type="hidden" value="nuevo">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <center>
-                                            <button type="button" class="btn btn-success" id="Confirmar" onClick= "nuevoServicio()">Confirmar</button>
-                                        </center>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- SIN AUTORIZAR-->
-                    <div id ="collapseSinAutorizar" name ="collapseSinAutorizar" class="collapse">
-                        <div class="card border-left-warning shadow h-60 py-0 py-0">        
-                            <div class="card card-header">
+                    <div id="collapseSinAutorizar" name="collapseSinAutorizar" class="collapse mb-3">
+                        <div class="card border-start border-warning border-2 shadow-sm">        
+                            <div class="card-header bg-transparent fw-bold text-warning py-2 fs-6">
                                 Servicios sin autorizar
                             </div>
-                            <div class="card card-body">
-                                <div class="row">
-                                    <table id="tablaSinAutorizar" name="tablaSinAutorizar" class="display responsive table table-striped table-hover table-sm">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table id="tablaSinAutorizar" name="tablaSinAutorizar" class="table table-striped table-hover table-sm align-middle mb-0" style="font-size: 0.85rem;">
                                         <thead>
-                                            <tr class="table-primary">
-                                                <th>Fecha/OT</th>
-                                                <th>Ing</th>
-                                                <th>T. Serv</th>
-                                                <th> </th>
+                                            <tr class="table-light text-secondary">
+                                                <th class="">Fecha</th>
+                                                <th class="py-2">OTs</th>
+                                                <th class="py-2">Ing</th>
+                                                <th class="py-2">T. Serv</th>
+                                                <th class="pe-2 py-2 text-end">Acciones</th> 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        </tbody>
+                                            </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
@@ -215,32 +246,7 @@
                 $(target).collapse('show');
             });
 
-        });        
-        //AREA
-        function muestraDepto(){
-            var accion = "verDepto";
-            
-                $.ajax({
-                    url: 'acciones_inicio.php',
-                    method: 'POST',
-                    dataType: 'json',
-                    data:{accion},
-                    success: function(data) {
-                        var select = $('#area');
-                        data.forEach(function(area) {
-                            var option = $('<option></option>').attr('value', area.clave).text(area.clave+' - '+area.area);
-                            select.append(option);
-                        });
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Swal.fire({
-                            icon: "error",
-                            text: "!No se pudieron cargar las areas!",
-                        });
-                        
-                    }
-                });
-        }
+        });                
         
         async function nuevoServicio(){
             const form = document.querySelector("#form"); // Obtener el formulario
@@ -249,54 +255,50 @@
                     icon: "warning",
                     text: "Por favor, completa todos los campos requeridos.",
                 });
-                return;  // No continuar con el envío si el formulario no es válido
+                return;  // No continuar si no es válido
             }  
             
             const datosGerencia = await verificarGerencia(); 
-    
+            let cuantos = 0;
+            let inf_adicional = '';
+
             if (datosGerencia) {
                 cuantos = datosGerencia.cuantos;
                 inf_adicional = datosGerencia.inf_adicional;
                 console.log('Acceso concedido:', cuantos, inf_adicional);
             } else {
-                cuantos = 0;
-                inf_adicional = '';
                 console.log('Sin acceso de gerencia');
             }
             
-            accion = "nuevoServicio";
-            coordenadas = $('#coordenadas').val();
-            comentarios = $('#comentarios').val();
-            tipo_actividad = $('#tipo_actividad').val();
-            tipo_servicio = $('#tipo_servicio').val();
-            area = $('#area').val();
-            ot = $('#ot').val();
-            ov = $('#ov').val();
+            // [NUEVO]: Serializamos todo el formulario dinámico completo
+            let datosFormulario = $('#form').serialize();
+            
+            // Le concatenamos los parámetros adicionales calculados y la acción
+            datosFormulario += `&accion=nuevoServicio&cuantos=${cuantos}&inf_adicional=${encodeURIComponent(inf_adicional)}`;
             
             $.ajax({
                     url: 'acciones_inicio.php',
                     method: 'POST',
                     dataType: 'json',
-                    data:{accion, area, tipo_servicio, tipo_actividad, comentarios, coordenadas, ot, ov, cuantos, inf_adicional},
+                    data: datosFormulario, // [NUEVO]: Enviamos el paquete completo unificado
                     success: function(data) {
-                        
                         Swal.fire({
                             icon: "success",
-                            text: "Se proceso con exito.",
+                            text: "Se procesó con éxito.",
                         });
                         llenaTablaSinAuto();
                         limpiarFormulario(); 
-                        // Ocultar el modal de "Nuevo Servicio"
+                        
+                        // Ocultar y mostrar contenedores
                         $('#collapseFormularioInicio').collapse('hide');
                         $('#collapseSinAutorizar').collapse('show');
-                        enviaCorreo();
+                        //enviaCorreo();
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         Swal.fire({
                             icon: "info",
-                            text: "!Atención! Tu servicio no se pudo procesar.",
+                            text: "¡Atención! Tu servicio no se pudo procesar.",
                         });
-                        
                     }
             });
         }
@@ -316,7 +318,7 @@
         //Llena Tabla "Sin Autorizar"
         function llenaTablaSinAuto(){
             rolUsuario = <?php echo $_COOKIE["rol"]; ?>;
-            noEmpleado = <?php echo $_COOKIE["noEmpleado"]; ?>; 
+            noEmpleado = <?php echo $_COOKIE["noEmpleado"]; ?>;   
             
             $.ajax({
                     url: 'acciones_inicio.php',
@@ -373,11 +375,12 @@
                             }
                             
                             table.row.add([
-                                Registro.fecha_creacion + `<br>`+ Registro.ot,
+                                Registro.fecha_creacion,
+                                (Registro.ots || '').replace(/,/g, '<br>'), 
                                 Registro.ingeniero,
                                 Registro.tipo_s,
-                                Botones + BotonesG, //`<button class="btn btn-info btn-sm" onclick="autorizarServicio(${Registro.id})">Validar</button>`,
-                                ]).draw(false);
+                                Botones + BotonesG 
+                            ]).draw(false);
                         });
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -532,6 +535,145 @@
                 return null;
             }
         }
+
+// Variable global para almacenar las áreas una vez cargadas desde el servidor
+let listaAreasGlobal = [];
+
+function muestraDepto() {
+    var accion = "verDepto";
+    
+    $.ajax({
+        url: 'acciones_inicio.php',
+        method: 'POST',
+        dataType: 'json',
+        data: { accion: accion },
+        success: function(data) {
+            // Guardamos los datos en nuestra variable global
+            listaAreasGlobal = data;
+            
+            // Llenamos el primer select que ya existe en el HTML
+            llenarSelectAreas($('select[name="area[]"]'));
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: "error",
+                text: "¡No se pudieron cargar las áreas!",
+            });
+        }
+    });
+}
+
+// Función auxiliar para rellenar CUALQUIER select de áreas con la variable global
+function llenarSelectAreas(elementoSelect) {
+    // Limpiamos las opciones previas dejando solo la opción por defecto
+    elementoSelect.html('<option value="">Área...</option>');
+    
+    // Recorremos la variable global y añadimos las opciones
+    listaAreasGlobal.forEach(function(area) {
+        var option = $('<option></option>')
+            .attr('value', area.clave)
+            .text(area.clave + ' - ' + area.area);
+        elementoSelect.append(option);
+    });
+}
+
+// MODIFICACIÓN A TU FUNCIÓN ANTERIOR:
+function agregarRenglonDinamico() {
+    const contenedor = document.getElementById('contenedorDinamico');
+    const nuevoRenglon = document.createElement('div');
+    nuevoRenglon.className = 'row g-1 mb-2 alineacion-renglon align-items-center';
+    
+    // Nota que el select inicia vacío, lo llenaremos justo abajo mediante jQuery
+    nuevoRenglon.innerHTML = `
+        <div class="col-5">
+            <select name="area[]" class="form-select form-select-sm" required>
+                <option value="">Área...</option>
+            </select>
+        </div>
+        <div class="col-4">
+            <input type="text" name="ot[]" class="form-control form-control-sm" placeholder="OT" required>
+        </div>
+        <div class="col-2">
+            <input type="number" name="tiempo[]" class="form-control form-control-sm campo-tiempo" placeholder="Hrs" min="0.1" max="4" step="0.1" onchange="calcularTotalHoras()" required>
+        </div>
+        <div class="col-1 text-center">
+            <button type="button" class="btn btn-sm text-danger p-0" onclick="eliminarRenglonDinamico(this)">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    `;
+    
+    contenedor.appendChild(nuevoRenglon);
+    
+    // Buscamos el select de ESTE nuevo renglón específico y lo llenamos al instante
+    const nuevoSelect = $(nuevoRenglon).find('select[name="area[]"]');
+    llenarSelectAreas(nuevoSelect);
+    
+    actualizarBotonesEliminar();
+}
+
+// Función para eliminar un renglón específico
+function eliminarRenglonDinamico(boton) {
+    boton.closest('.row').remove();
+    calcularTotalHoras();
+    actualizarBotonesEliminar();
+}
+
+// Controla que no se pueda borrar el último renglón obligatorio
+function actualizarBotonesEliminar() {
+    const renglones = document.querySelectorAll('#contenedorDinamico .row');
+    if (renglones.length === 1) {
+        renglones[0].querySelector('.text-danger').disabled = true;
+    } else {
+        renglones.forEach(r => r.querySelector('.text-danger').disabled = false);
+    }
+}
+
+// Suma el tiempo de todas las OTs agregadas en tiempo real
+function calcularTotalHoras() {
+    let total = 0;
+    const camposTiempo = document.querySelectorAll('.campo-tiempo');
+    
+    camposTiempo.forEach(campo => {
+        const valor = parseFloat(campo.value);
+        if (!isNaN(valor)) {
+            total += valor;
+        }
+    });
+    
+    const badge = document.getElementById('totalHorasBadge');
+    badge.innerText = `Total: ${total.toFixed(1)} hrs`;
+    
+    if (total > 4) {
+        badge.className = "badge bg-danger text-white";         
+    } else {
+        badge.className = "badge bg-secondary text-white";
+    }
+    
+    return total;
+}
+
+// Validación antes de enviar
+function validarYEnviar() {
+    const totalHoras = calcularTotalHoras();
+    
+    if (totalHoras > 4) {
+        //alert(`❌ Error: La sumatoria de horas (${totalHoras.toFixed(1)} hrs) no puede ser mayor a 4 horas.`);
+        swal.fire({
+            icon: "error",
+            title: "¡Error!",
+            text: `La sumatoria de horas (${totalHoras.toFixed(1)} hrs) no puede ser mayor a 4 horas.`,
+        });
+        return;
+    }
+    
+    const formulario = document.getElementById('form');
+    if (formulario.checkValidity()) {
+        nuevoServicio(); 
+    } else {
+        formulario.reportValidity();
+    }
+}
     </script>
 </body>
 </html>

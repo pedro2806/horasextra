@@ -157,14 +157,14 @@ if ($accion == 'ValidarEstatus'){
     if ($accion == 'verServiciosAutorizados'){
         
         if($_COOKIE['rol'] == 1){
-            $sqlllenaTablaActividades = "SELECT S.fecha_creacion, S.ot, S.ov, S.estatus, S.id, U.nombre
+            $sqlllenaTablaActividades = "SELECT S.fecha_creacion, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot, S.ov, S.estatus, S.id, U.nombre
                                         FROM servicio S
                                         INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
                                         WHERE S.id_usuario = $id_usuario AND S.estatus = 'En proceso' AND S.autoriza_jefe = 'Autorizado' AND S.autoriza_gerencia = 'Autorizado'";
         }
         if($_COOKIE['rol'] == 2 || $_COOKIE['rol'] == 4){
             $area = $_COOKIE['area'];
-            $sqlllenaTablaActividades = "SELECT S.fecha_creacion, S.ot, S.ov, S.estatus, S.id, U.nombre
+            $sqlllenaTablaActividades = "SELECT S.fecha_creacion, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot, S.ov, S.estatus, S.id, U.nombre
                                         FROM servicio S
                                         INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
                                         WHERE U.departamento = $area AND S.estatus = 'En proceso' AND S.autoriza_jefe = 'Autorizado' AND S.autoriza_gerencia = 'Autorizado'";

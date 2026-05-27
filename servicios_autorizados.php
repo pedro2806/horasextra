@@ -45,101 +45,94 @@
                     <!--<div class="d-sm-flex align-items-center justify-content-between mb-0">
                         <h3 class="mb-0 text-gray-800">Horas Extras</h3>
                     </div>-->
-                    <!-- TABLA DE LOS SERVICIOS PENDIENTES -->
-                    <div id ="FormularioPendientes" name ="FormularioPendientes" class="card shadow mb-0">
-                        <div class="card border-left-primary shadow h-60 py-0">
-                            <div class="card-header">
-                                Servicios Pendientes <br><?php echo $_COOKIE['nombre']; ?>
-                            </div>
-                            <div class="card-body">
-                                <table id="tablaServiciosAutorizados" name="tablaServiciosAutorizados" class="responsive table table-sm">
-                                    <thead>
-                                        <tr class="table-primary">
-                                            <th style="width: 25%;">Usuario</th>
-                                            <th style="width: 25%;">OT</th>
-                                            <th style="width: 25%;">Estatus</th>
-                                            <th style="width: 25%;"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
+                <div id="FormularioPendientes" name="FormularioPendientes" class="card border-start border-primary border-2 shadow-sm mb-3">
+                    <div class="card-header bg-transparent py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-primary fs-6">Servicios Pendientes</span>
+                            <small class="text-muted fw-semibold"><?php echo $_COOKIE['nombre']; ?></small>
                         </div>
                     </div>
-                    <!-- FORMULARIO PARA CAPTURAR NUEVA ACTIVIDAD -->
-                    <div id ="FormularioInicio" name ="FormularioInicio" class="card shadow mb-0">
-                        <div class="card border-left-warning shadow h-60 py-0">
-                            <div class="card-header">
-                                Iniciar activad <label id="badgeOT" name="badgeOT" class="badge text-bg-warning" style="font-size: 16px;"></label>
-                            </div>
-                            <div class="card-body">
-                                
-                                <div class="row no-gutters align-items-center">
-                                    <div class="row">
-                                        <div class="col-12 col-md-3 col-sm-6 mb-0">
-                                            <label for="tipo_actividad">Actividad</label>
-                                            <select id="tipo_actividad" name="tipo_actividad" class="form-select" required>
-                                                <option value="">Selecciona...</option>
-                                                <option value="Traslado">Traslado</option>
-                                                <option value="Servicio">Servicio</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-md-9 col-sm-6 mb-0">
-                                            <label for="comentarios">Comentarios</label>
-                                            <textarea id="comentarios" name="comentarios" rows="2" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <center>
-                                                <button type="button" class="btn btn-success btn-sm" onClick= "ActividadNueva()">Confirmar</button>
-                                            </center>
-                                        </div>
-                                    </div>
-                                    <br>
-                            </div>
-                            </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table id="tablaServiciosAutorizados" name="tablaServiciosAutorizados" class="table table-striped table-hover table-sm align-middle mb-0" style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr class="table-light text-secondary">
+                                        <th class="ps-2 py-2" style="width: 30%;">Usuario</th>
+                                        <th class="py-2" style="width: 25%;">OT</th>
+                                        <th class="py-2" style="width: 25%;">Estatus</th>
+                                        <th class="pe-2 py-2 text-end" style="width: 20%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
-                    
-                    <!-- FORMULARIO ACTIVIDADES YA INICIADAS -->
-                    <div id ="FormularioFin" name ="FormularioFin" class="card shadow mb-0">
-                        <div class="card border-left-info shadow h-60 py-0">
-                            <div class="card-header mb-0">
-                                Actividades <h4 id="badgeOTfin" name="badgeOTfin" class="badge text-bg-info" style="font-size: 16px;"></h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-0 p-0">
-                                        <div class="mb-0 font-weight-bold text-gray-800" id="FechaINC" name="FechaINC">
-                                            Fecha de Inicio: <label id="lblFechaIni" name="lblFechaIni"></label>
-                                        </div>
-                                        <div class="mb-0 font-weight-bold text-gray-800" id="Tipo" name="Tipo">
-                                            Servicio: <label id="lblTipoS" name="lblTipo"></label>
-                                        </div>
-                                        <div class="alert alert-warning mb-0" role="alert" id="divServPendiente" name="divServPendiente">
-                                            <label id="lblSerPendiente" name="lblSerPendiente"></label> 
-                                        </div>
-                                    </div>                    
+                </div>
+
+                <div id="FormularioInicio" name="FormularioInicio" class="card border-start border-warning border-2 shadow-sm mb-3">
+                    <div class="card-header bg-transparent py-2 d-flex align-items-center justify-content-between">
+                        <span class="fw-bold text-warning fs-6">Iniciar Actividad</span>
+                        <span id="badgeOT" name="badgeOT" class="badge bg-warning text-dark small"></span>
+                    </div>
+                    <div class="card-body p-2.5">
+                        <form id="formNuevaActividad">
+                            <div class="row g-2">
+                                <div class="col-12 col-sm-4">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text bg-light text-secondary fw-semibold" style="width: 75px; justify-content: center;">Actividad</span>
+                                        <select id="tipo_actividad" name="tipo_actividad" class="form-select" required>
+                                            <option value="">Selecciona...</option>
+                                            <option value="Traslado">Traslado</option>
+                                            <option value="Servicio">Servicio</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-8">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text bg-light text-secondary fw-semibold d-none d-sm-flex" style="width: 75px; justify-content: center;">Obs.</span>
+                                        <textarea id="comentarios" name="comentarios" rows="1" class="form-control" placeholder="Comentarios..."></textarea>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <input type="hidden" id="idActividad" name="idActividad" class="form-control">
-                                <input type="hidden" id="idServicio" name="idServicio" class="form-control">
-                                <input type="hidden" id="otServicio" name="otServicio" class="form-control">
-                                <input type="hidden" id="coordenadas" name="coordenadas" class="form-control">
-                                <center>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-info btn-sm" id="btnNuevaActividad" name="btnNuevaActividad" onClick="showModalNuevaA()">Nueva Actividad</button>
-                                        <button type="button" class="btn btn-warning btn-sm" id="btnFinActividad" name="btnFinActividad" onClick= "finalizarActividad()">Finalizar Actividad</button>
-                                        <button type="button" class="btn btn-success btn-sm" id="btnCerrarServicio" name="btnCerrarServicio"onClick= "cerrarServicio()">Cerrar Servicio</button>
-                                        <button type="button" class="btn btn-primary btn-sm" id="btnVerActividades" name="btnVerActividades"onclick="showModalActividades()">Ver Actividades</button>
-                                    </div>
-                                </center>
+                            <div class="text-center mt-2.5">
+                                <button type="button" class="btn btn-success btn-sm px-4 shadow-sm fw-semibold" onClick="ActividadNueva()">
+                                    Confirmar
+                                </button>
                             </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="FormularioFin" name="FormularioFin" class="card border-start border-info border-2 shadow-sm mb-3">
+                    <div class="card-header bg-transparent py-2 d-flex align-items-center justify-content-between">
+                        <span class="fw-bold text-info fs-6">Actividades en Proceso</span>
+                        <span id="badgeOTfin" name="badgeOTfin" class="badge bg-info text-dark small"></span>
+                    </div>
+                    <div class="card-body p-2.5" style="font-size: 0.85rem;">
+                        <div class="mb-1 text-secondary">
+                            <span class="fw-bold">Inicio:</span> <label id="lblFechaIni" name="lblFechaIni" class="text-dark m-0"></label>
+                        </div>
+                        <div class="mb-2 text-secondary">
+                            <span class="fw-bold">Servicio:</span> <label id="lblTipoS" name="lblTipo" class="text-dark m-0"></label>
+                        </div>
+                        <div class="alert alert-warning py-1.5 px-2 mb-0 border-0 small shadow-sm" role="alert" id="divServPendiente" name="divServPendiente">
+                            <i class="bi bi-exclamation-circle me-1"></i> <label id="lblSerPendiente" name="lblSerPendiente" class="m-0"></label> 
                         </div>
                     </div>
+                    <div class="card-footer bg-transparent p-2">
+                        <input type="hidden" id="idActividad" name="idActividad">
+                        <input type="hidden" id="idServicio" name="idServicio">
+                        <input type="hidden" id="otServicio" name="otServicio">
+                        <input type="hidden" id="coordenadas" name="coordenadas">
+                        
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-info btn-sm" id="btnNuevaActividad" name="btnNuevaActividad" onClick="showModalNuevaA()">Nueva Act</button>
+                            <button type="button" class="btn btn-warning btn-sm" id="btnFinActividad" name="btnFinActividad" onClick= "finalizarActividad()">Finalizar Actividad</button>
+                            <button type="button" class="btn btn-success btn-sm" id="btnCerrarServicio" name="btnCerrarServicio"onClick= "cerrarServicio()">Cerrar Servicio</button>
+                            <button type="button" class="btn btn-primary btn-sm" id="btnVerActividades" name="btnVerActividades"onclick="showModalActividades()">Ver Actividades</button>
+                        </div>
+                    </div>
+                </div>
                 </div>
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">

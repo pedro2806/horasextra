@@ -57,6 +57,12 @@
                     <span>Horas Por validar</span>
                 </a>
             </li>
+            <li class = "nav-item">
+                <a class = "nav-link    collapsed" href = "valida_pagos" data-toggle = "collapse" data-target = "#collapseTwo" aria-expanded = "true" aria-controls = "collapseTwo">
+                    <i class = "fas fa-fw fa-money-bill"></i>
+                    <span>Validar Pagos</span>
+                </a>
+            </li>
     <?php 
         }
     
@@ -155,7 +161,7 @@
         <!-- Divider -->
         <hr class = "sidebar-divider d-none d-md-block">
         <li class = "nav-item">
-        <a class = "nav-link" onclick="salir()" data-toggle = "modal" data-target = "#logoutModalN">
+        <a class = "nav-link" href="logout" data-toggle = "modal" data-target = "#logoutModalN">
             <i class = "fas fa-sign-out-alt "></i>
             <span>Salir</span>
         </a>
