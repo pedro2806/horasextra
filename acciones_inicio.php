@@ -21,6 +21,8 @@ $id_ot = $_POST["id_ot"];
 $idActividad = $_POST["idActividad"];
 $idServicio = $_POST["idServicio"];
 
+$fechaEjecucion = $_POST["fecha_ejecucion"];
+
 $estatus = $_POST["estatus"];
 
 //FUNCION PARA AGREGAR NUEVO SERVICIO
@@ -45,11 +47,11 @@ if($accion == 'nuevoServicio'){
 
     // TUS INSERTS ORIGINALES (Se quedan exactamente igual, usando las variables del primer elemento)
     if (in_array($id_usuario, $mt_users)) {
-        $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia) 
-                        VALUES ('$id_usuario', '$tipo_servicio', '$ov', '$ot_principal', 'En proceso','$fecha_inicio', '$area_principal', 'Por Autorizar', 0, '$comentarios', 'Autorizado')";
+        $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia, fecha_ejecucion ) 
+                        VALUES ('$id_usuario', '$tipo_servicio', '$ov', '$ot_principal', 'En proceso','$fecha_inicio', '$area_principal', 'Por Autorizar', 0, '$comentarios', 'Autorizado', '$fechaEjecucion')";
     } else {
-        $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia) 
-                        VALUES ('$id_usuario', '$tipo_servicio', '$ov', '$ot_principal', 'En proceso','$fecha_inicio', '$area_principal', 'Por Autorizar', 0, '$comentarios', 'Por Autorizar')";
+        $sqlNuevoServicio = "INSERT INTO servicio (id_usuario, tipo_s, ov, ot, estatus, fecha_creacion, area, autoriza_jefe, id_ot, comentarios, autoriza_gerencia, fecha_ejecucion ) 
+                        VALUES ('$id_usuario', '$tipo_servicio', '$ov', '$ot_principal', 'En proceso','$fecha_inicio', '$area_principal', 'Por Autorizar', 0, '$comentarios', 'Por Autorizar', '$fechaEjecucion')";
     }
                                                                                                                                                                                 
     $ResNuevoServicio = $conn->query($sqlNuevoServicio);
@@ -176,5 +178,37 @@ if($accion == 'nuevoServicio'){
                                 WHERE id = $idServicio";
         
         $resAutorizaServicio = $conn->query($sqlAutorizaServicio);
+    }
+
+    //GUARDAR CAMBIOS SERVICIO
+    if ($accion == 'guardarCambios'){
+        $nuevaFechaEjecucion = $_POST["nuevaFecha"];
+        $idServicio = $_POST["idServicio"];
+        $sqlGuardarCambios = "UPDATE servicio 
+                                SET 
+                                fecha_ejecucion = '$nuevaFechaEjecucion'
+                                WHERE id = $idServicio";
+        
+        $resGuardarCambios = $conn->query($sqlGuardarCambios);
+
+        if (!$conn->query($sqlGuardarCambios)) {
+            echo json_encode(['success' => false, 'error' => $conn->error]);
+        } else {
+            echo json_encode(['success' => true]);
+        }
+    }
+
+    if ($accion == 'cancelarServicio') {
+        $sqlCancelarServicio = "UPDATE servicio 
+                                SET estatus = 'Cancelado'
+                                WHERE id = $idServicio";
+        
+        $resCancelarServicio = $conn->query($sqlCancelarServicio);
+
+        if (!$conn->query($sqlCancelarServicio)) {
+            echo json_encode(['success' => false, 'error' => $conn->error]);
+        } else {
+            echo json_encode(['success' => true]);
+        }
     }
 ?>   

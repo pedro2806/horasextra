@@ -129,7 +129,7 @@
                                                             <input type="text" name="ot[]" class="form-control form-control-sm" placeholder="OT" required>
                                                         </div>
                                                         <div class="col-2">
-                                                            <input type="number" name="tiempo[]" class="form-control form-control-sm campo-tiempo" placeholder="Hrs" min="0.1" max="4" step="0.1" onchange="calcularTotalHoras()" required>
+                                                            <input type="number" name="tiempo[]" class="form-control form-control-sm campo-tiempo" placeholder="Hrs" min="0.1" step="0.1" onchange="calcularTotalHoras()" required>
                                                         </div>
                                                         <div class="col-1 text-center">
                                                             <button type="button" class="btn btn-sm text-danger p-0" onclick="eliminarRenglonDinamico(this)" disabled>
@@ -181,13 +181,40 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            </tbody>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- MODAL PARA EDITAR SERVICIO -->
+                <div class="modal fade" id="modalEditarServicio" tabindex="-1" aria-labelledby="modalEditarServicioLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditarServicioLabel">Editar Servicio</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Aquí se cargará el formulario de edición dinámicamente -->
+                                <div id="contenidoEditarServicio">
+                                    <label for="Reprogramar">Reprogramar</label>
+                                    <input class="form-control" type="date" id="Reprogramar" name="Reprogramar">
+                                    <input type="hidden" id="idServicioEditar" name="idServicioEditar">  
+                                    <br>                                    
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" id="guardarCambios" onclick="guardarCambios()">Guardar Cambios</button>
+                                <button type="button" class="btn btn-danger" id="cancelarServicio" onclick="cancelarServicio()">Cancelar Servicio</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
@@ -333,14 +360,18 @@
                         registros2.forEach(function(Registro) {
                             BotonesG = '';
                             Botones = '';
+                            BotonEditar = '';
                             if (rolUsuario == 2 || rolUsuario == 3 || rolUsuario == 4) {
+                                
                                 if (noEmpleado == 521) {
                                     if (Registro.autoriza_gerencia == "Por Autorizar") {
                                         BotonesG = `<button class="btn btn-success btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Autorizado')"><i class="fa fa-check"></i></button>
                                             <button class="btn btn-danger btn-sm" onclick="autorizarServicioG(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;                                        
+                                        BotonEditar = `<button class="btn btn-primary btn-sm" onclick="editarServicio(${Registro.id})"><i class="fa fa-edit"></i></button>`;
                                     }
                                     else{
                                         BotonesG = `<span class="badge text-bg-success">Autorizo Gcia</span>`;
+                                        BotonEditar = `<button class="btn btn-primary btn-sm" onclick="editarServicio(${Registro.id})"><i class="fa fa-edit"></i></button>`;
                                     }
                                     if (Registro.autoriza_jefe == "Por Autorizar") {
                                         Botones = `<span class="badge text-bg-warning">Validando</span>`;
@@ -351,8 +382,10 @@
                                     if (Registro.autoriza_jefe == "Por Autorizar") {
                                         Botones = `<button class="btn btn-primary btn-sm" onclick="autorizarServicio(${Registro.id}, 'Autorizado')"><i class="fa fa-check"></i></button>
                                             <button class="btn btn-danger btn-sm" onclick="autorizarServicio(${Registro.id}, 'Rechazado')"><i class="fa fa-times"></i></button>`;
+                                        BotonEditar = `<button class="btn btn-primary btn-sm" onclick="editarServicio(${Registro.id})"><i class="fa fa-edit"></i></button>`;
                                     }else{
                                         Botones = `<span class="badge text-bg-success">Autorizado</span>`;
+                                        BotonEditar = `<button class="btn btn-primary btn-sm" onclick="editarServicio(${Registro.id})"><i class="fa fa-edit"></i></button>`;
                                     }
                                     if (Registro.autoriza_gerencia == "Por Autorizar") {
                                         BotonesG = `<span class="badge text-bg-warning">Validando Gcia</span>`;
@@ -379,7 +412,7 @@
                                 (Registro.ots || '').replace(/,/g, '<br>'), 
                                 Registro.ingeniero,
                                 Registro.tipo_s,
-                                Botones + BotonesG 
+                                Botones + BotonesG + BotonEditar
                             ]).draw(false);
                         });
                     },
@@ -594,7 +627,7 @@ function agregarRenglonDinamico() {
             <input type="text" name="ot[]" class="form-control form-control-sm" placeholder="OT" required>
         </div>
         <div class="col-2">
-            <input type="number" name="tiempo[]" class="form-control form-control-sm campo-tiempo" placeholder="Hrs" min="0.1" max="4" step="0.1" onchange="calcularTotalHoras()" required>
+            <input type="number" name="tiempo[]" class="form-control form-control-sm campo-tiempo" placeholder="Hrs" min="0.1" step="0.1" onchange="calcularTotalHoras()" required>
         </div>
         <div class="col-1 text-center">
             <button type="button" class="btn btn-sm text-danger p-0" onclick="eliminarRenglonDinamico(this)">
@@ -634,6 +667,8 @@ function calcularTotalHoras() {
     let total = 0;
     const camposTiempo = document.querySelectorAll('.campo-tiempo');
     
+    ts = $('#tipo_servicio').val();
+
     camposTiempo.forEach(campo => {
         const valor = parseFloat(campo.value);
         if (!isNaN(valor)) {
@@ -644,10 +679,18 @@ function calcularTotalHoras() {
     const badge = document.getElementById('totalHorasBadge');
     badge.innerText = `Total: ${total.toFixed(1)} hrs`;
     
-    if (total > 4) {
-        badge.className = "badge bg-danger text-white";         
+    if (ts === "Externo") {
+        if (total > 8) {
+            badge.className = "badge bg-danger text-white";
+        } else {
+            badge.className = "badge bg-secondary text-white";
+        }
     } else {
-        badge.className = "badge bg-secondary text-white";
+        if (total > 8) {
+            badge.className = "badge bg-danger text-white";
+        } else {
+            badge.className = "badge bg-secondary text-white";
+        }   
     }
     
     return total;
@@ -656,15 +699,24 @@ function calcularTotalHoras() {
 // Validación antes de enviar
 function validarYEnviar() {
     const totalHoras = calcularTotalHoras();
+    ts = $('#tipo_servicio').val();
     
-    if (totalHoras > 4) {
-        //alert(`❌ Error: La sumatoria de horas (${totalHoras.toFixed(1)} hrs) no puede ser mayor a 4 horas.`);
-        swal.fire({
-            icon: "error",
-            title: "¡Error!",
-            text: `La sumatoria de horas (${totalHoras.toFixed(1)} hrs) no puede ser mayor a 4 horas.`,
-        });
-        return;
+    if(ts === "Externo") {
+        if (totalHoras > 8) {
+            Swal.fire({
+                icon: "warning",
+                text: "El total de horas para servicios externos no puede exceder las 8 horas.",
+            });
+            return;
+        }
+    } else if (ts === "Interno") {
+        if (totalHoras > 8) {
+            Swal.fire({
+                icon: "warning",
+                text: "El total de horas para servicios internos no puede exceder las 8 horas.",
+            });
+            return;
+        }
     }
     
     const formulario = document.getElementById('form');
@@ -674,6 +726,75 @@ function validarYEnviar() {
         formulario.reportValidity();
     }
 }
+
+function editarServicio(idServicio) {    
+    $('#modalEditarServicio').modal('show');
+    $('#idServicioEditar').val(idServicio);
+}    
+
+// Función para guardar cambios al editar un servicio
+function guardarCambios() {
+    const idServicio = $('#idServicioEditar').val();
+    const nuevaFecha = $('#Reprogramar').val();
+    if (!nuevaFecha) {
+        Swal.fire({
+            icon: "warning",
+            text: "Por favor, selecciona una nueva fecha para reprogramar.",
+        });
+        return;
+    }
+    $.ajax({
+        url: 'acciones_inicio.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {accion: 'guardarCambios', idServicio, nuevaFecha},
+        success: function(response) {
+            Swal.fire("Cambios guardados con éxito");
+            $('#modalEditarServicio').modal('hide');
+            llenaTablaSinAuto();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: "error",
+                text: "¡No se pudieron guardar los cambios!",
+            });
+        }
+    });
+}
+
+function cancelarServicio() {
+    const idServicio = $('#idServicioEditar').val();
+    Swal.fire({
+        title: "¿Cancelar Servicio?",
+        showDenyButton: true,
+        confirmButtonText: "Sí, cancelar",
+        icon: "warning",
+        denyButtonText: "No, mantener"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'acciones_inicio.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {accion: 'cancelarServicio', idServicio},
+                success: function(response) {
+                    Swal.fire("Servicio cancelado con éxito");
+                    $('#modalEditarServicio').modal('hide');
+                    llenaTablaSinAuto();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        icon: "error",
+                        text: "¡No se pudo cancelar el servicio!",
+                    });
+                }
+            });
+        } else if (result.isDenied) {
+            Swal.fire("Cambios no guardados", "");
+        }
+    });
+}
+
     </script>
 </body>
 </html>
