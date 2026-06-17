@@ -13,6 +13,7 @@
 
     <!-- Custom styles for this template-->
     <link href = "css/sb-admin-2.min.css" rel = "stylesheet">
+    <link href="css/horasextra.css" rel="stylesheet">
 
 </head>
 
@@ -128,34 +129,6 @@
                 echo '<script>swal("Usuario o contraseña incorrectos! ", "Vuelve a intentar!", "error");</script>';
             }
             
-            While ($row2 = mysqli_fetch_array($res2)){
-                $nombre = utf8_encode($row2["nombre"]);
-                $nombreEmpleado = utf8_encode($row2["usuario"]);
-                $noEmpleado = utf8_encode($row2["noEmpleado"]);
-                $region = utf8_encode($row2["region"]);
-                $area = utf8_encode($row2["departamento"]);
-                $rol = utf8_encode($row2["rol"]);
-            }
-    
-            if($nr == 1)
-            {   
-                //Define el tiempo de expiracion (3 minutos)
-                $expiryTime = date('D, d M Y H:i:s \G\M\T', time() + 172800000);
-                
-                echo '<script>document.cookie = "nombre='.$nombre.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "region='.$region.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "noEmpleado='.$noEmpleado.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "area='.$area.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>document.cookie = "rol='.$rol.';expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
-                echo '<script>window.location.assign("inicio")</script>';
-                
-            }
-            else if ($nr  ==  0)
-            {
-                echo '<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>';
-                echo '<script>swal("Usuario o contraseña incorrectos! ", "Vuelve a intentar!", "error");</script>';
-                
-            }
             
         }
     ?>

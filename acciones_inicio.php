@@ -4,8 +4,9 @@ include 'conn.php';
 //header('Content-Type: application/json');
 date_default_timezone_set('America/Mexico_City');
 
-$accion = $_POST["accion"];
-$id_usuario = $_COOKIE['noEmpleado'];
+$accion = $_POST["accion"] ?? '';
+$id_usuario = $_COOKIE['noEmpleado'] ?? '';
+$rol = $_COOKIE['rol'] ?? '';
 
 $tipo_servicio = $_POST["tipo_servicio"] ?? '';
 $tipo_actividad = $_POST["tipo_actividad"] ?? '';
@@ -29,8 +30,8 @@ $estatus = $_POST["estatus"] ?? '';
 
 if($accion == 'nuevoServicio'){
 
-    $cuantos = $_POST["cuantos"];
-    $inf_adicional = $_POST["inf_adicional"];
+    $cuantos = $_POST["cuantos"] ?? '';
+    $inf_adicional = $_POST["inf_adicional"] ?? '';
     // USUARIOS MT 
     $mt_users = explode(",", $inf_adicional);
     $mt_users = array_map('trim', $mt_users);
@@ -111,24 +112,25 @@ if($accion == 'nuevoServicio'){
 //Llenar tabla Sin Autorizar
     
     if ($accion == 'llenaTablaSinAuto'){
+        $sqlllenaTablaSinAuto = null;
 
-        if($_COOKIE['rol'] == 1){
+        if($rol == 1){
             $sqlllenaTablaSinAuto = "SELECT id, ot, ov, tipo_s, autoriza_jefe, DATE_FORMAT(fecha_creacion, '%d/%m/%Y') AS fecha_creacion, comentarios, (SELECT nombre FROM usuarios WHERE noEmpleado = S.id_usuario) as ingeniero,
                                     autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot_desglose
                                     FROM servicio S
                                     WHERE S.id_usuario = $id_usuario AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion ASC";
         }
         
-        if($_COOKIE['rol'] == 2 || $_COOKIE['rol'] == 4){
-            $area = $_COOKIE['area'];
+        if($rol == 2 || $rol == 4){
+            $area = ($_COOKIE['area'] ?? '');
             $sqlllenaTablaSinAuto = "SELECT S.id, S.ot, S.ov, S.tipo_s, S.autoriza_jefe, DATE_FORMAT(S.fecha_creacion, '%d/%m/%Y') AS fecha_creacion, S.comentarios, U.nombre as ingeniero,
                                     S.autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS   ot_desglose    
                                     FROM servicio S
                                     INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
                                     WHERE U.departamento = $area AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion ASC";
         }
-        if($_COOKIE['rol'] == 3 && $_COOKIE['noEmpleado'] == 521){
-            $area = $_COOKIE['area'];
+        if($rol == 3 && $id_usuario == 521){
+            $area = ($_COOKIE['area'] ?? '');
             $sqlllenaTablaSinAuto = "SELECT S.id, S.ot, S.ov, S.tipo_s, S.autoriza_jefe, DATE_FORMAT(S.fecha_creacion, '%d/%m/%Y') AS fecha_creacion, S.comentarios, U.nombre as ingeniero,
                                     S.autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot_desglose        
                                     FROM servicio S
@@ -136,9 +138,12 @@ if($accion == 'nuevoServicio'){
                                     WHERE autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion ASC";
         }
         
+        if (!$sqlllenaTablaSinAuto) {
+            echo json_encode([]);
+            exit;
+        }
         $resllenaTablaSinAuto = $conn->query($sqlllenaTablaSinAuto);
-        
-        //$registros2 = [];
+
         if ($resllenaTablaSinAuto->num_rows > 0) {
             while ($rowllenaTablaSinAuto = $resllenaTablaSinAuto->fetch_assoc()) {
                 $registros2[] = array(
@@ -182,8 +187,8 @@ if($accion == 'nuevoServicio'){
 
     //GUARDAR CAMBIOS SERVICIO
     if ($accion == 'guardarCambios'){
-        $nuevaFechaEjecucion = $_POST["nuevaFecha"];
-        $idServicio = $_POST["idServicio"];
+        $nuevaFechaEjecucion = $_POST["nuevaFecha"] ?? '';
+        $idServicio = $_POST["idServicio"] ?? '';
         $sqlGuardarCambios = "UPDATE servicio 
                                 SET 
                                 fecha_ejecucion = '$nuevaFechaEjecucion'

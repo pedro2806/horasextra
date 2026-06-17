@@ -22,6 +22,7 @@ $usuario = isset($_POST['correoHR']) ? $_POST['correoHR'] : '';
         $antiguedad = $row2["antiguedad"];
         $diasD = $row2["diasdisponibles"];
         $rol = $row2["rol"];
+        $region = $row2["region"] ?? '';
         $area = $row2["departamento"];
     }
 
@@ -35,7 +36,7 @@ $usuario = isset($_POST['correoHR']) ? $_POST['correoHR'] : '';
         echo '<script>document.cookie = "SesionLogin=LoginMaster; expires=" + new Date(Date.now() + 99900000).toUTCString() + ";SameSite=Lax;";</script>';
         echo '<script>window.location.assign("inicio")</script>';
 
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         $_SESSION['nombredelusuario'] = $nombreEmpleado;
         $_SESSION['noEmpleado'] = $noEmpleado;
         $_SESSION['rol'] = $rol;

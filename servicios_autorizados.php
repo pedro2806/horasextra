@@ -3,8 +3,7 @@
 <?php
     //session_start();
     include 'conn.php';
-    if ($_COOKIE['nombre'] == '') {
-        echo $_COOKIE['nombredelusuario'];
+    if (($_COOKIE['nombre'] ?? '') == '') {
         echo '<script>window.location.assign("index")</script>';
     }
 ?>
@@ -23,6 +22,7 @@
     
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/horasextra.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -49,7 +49,7 @@
                     <div class="card-header bg-transparent py-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-bold text-primary fs-6">Servicios Pendientes</span>
-                            <small class="text-muted fw-semibold"><?php echo $_COOKIE['nombre']; ?></small>
+                            <small class="text-muted fw-semibold"><?php echo $_COOKIE['nombre'] ?? ''; ?></small>
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -222,7 +222,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="js/sb-admin-2.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
     

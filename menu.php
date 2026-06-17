@@ -1,10 +1,13 @@
 <?php
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) { session_start(); }
     include 'conn.php';
-    if($_COOKIE['nombre'] == ''){
+    if(($_COOKIE['nombre'] ?? '') == ''){
         echo '<script>window.location.assign("index")</script>';
     }
 ?>
+<script>
+(function(){try{if(localStorage.getItem('mess-theme')==='dark')document.body.classList.add('theme-dark');}catch(e){}})();
+</script>
 <!-- Sidebar -->
 <ul class = "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id = "accordionSidebar">
 
@@ -48,7 +51,8 @@
                 </a>
             </li>
     <?php 
-        if ($_COOKIE['rol'] == 3 || $_COOKIE['rol'] == 4) {
+        $rol = $_COOKIE['rol'] ?? '';
+        if ($rol == 3 || $rol == 4) {
     ?>
             <!----------------MENU 1------------------->
             <li class = "nav-item">
@@ -67,7 +71,7 @@
         }
     
     
-    if ($_COOKIE['rol'] == 2 || $_COOKIE['noEmpleado'] == 521) {
+    if ($rol == 2 || ($_COOKIE['noEmpleado'] ?? '') == 521) {
     ?>
             <!----------------MENU 1------------------->
             <li class = "nav-item">
@@ -161,7 +165,7 @@
         <!-- Divider -->
         <hr class = "sidebar-divider d-none d-md-block">
         <li class = "nav-item">
-        <a class = "nav-link" href="logout" data-toggle = "modal" data-target = "#logoutModalN">
+        <a class = "nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
             <i class = "fas fa-sign-out-alt "></i>
             <span>Salir</span>
         </a>
@@ -171,4 +175,21 @@
             <button class = "rounded-circle border-0" id = "sidebarToggle"></button>
         </div>
 </ul>
+
+<!-- Modal de confirmación de logout -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-left-danger">
+            <div class="modal-header">
+                <h4 class="modal-title" id="logoutModalLabel">Cerrar sesión</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><h5><b>¿Estas seguro?</b></h5></div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" type="button" data-bs-dismiss="modal">Cancelar</button>
+                <a class="btn btn-danger" href="logout">Salir</a>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- End of Sidebar -->

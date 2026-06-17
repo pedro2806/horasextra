@@ -6,7 +6,7 @@ date_default_timezone_set('America/Mexico_City');
 
 //echo "entro";
 $accion = $_POST["accion"] ?? '';
-$id_usuario = $_COOKIE['noEmpleado'];//$_POST["id_usuario"];
+$id_usuario = $_COOKIE['noEmpleado'] ?? '';
 
 $tipo_servicio = $_POST["tipo_servicio"] ?? '';
 $tipo_actividad = $_POST["tipo_actividad"] ?? '';
