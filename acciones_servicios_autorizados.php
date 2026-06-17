@@ -5,20 +5,20 @@ include 'conn.php';
 date_default_timezone_set('America/Mexico_City');
 
 //echo "entro";
-$accion = $_POST["accion"];
+$accion = $_POST["accion"] ?? '';
 $id_usuario = $_COOKIE['noEmpleado'];//$_POST["id_usuario"];
 
-$tipo_servicio = $_POST["tipo_servicio"];
-$tipo_actividad = $_POST["tipo_actividad"];
-$comentarios = $_POST["comentarios"];
-$coordenadas = $_POST["coordenadas"];
-$departamento = $_POST["departamento"];
-$ot = $_POST["ot"];
-$ov = $_POST["ov"];
-$fecha_inicio = date("Y-m-d H:i:s");
+$tipo_servicio = $_POST["tipo_servicio"] ?? '';
+$tipo_actividad = $_POST["tipo_actividad"] ?? '';
+$comentarios = $_POST["comentarios"] ?? '';
+$coordenadas = $_POST["coordenadas"] ?? '';
+$departamento = $_POST["departamento"] ?? '';
+$ot = $_POST["ot"] ?? '';
+$ov = $_POST["ov"] ?? '';
+$fecha_inicio = date("Y-m-d H:i:s") ?? '';
 
-$idActividad = $_POST["idActividad"];
-$idServicio = $_POST["idServicio"];
+$idActividad = $_POST["idActividad"] ?? '';
+$idServicio = $_POST["idServicio"] ?? '';
 
 // FINALIZAR ACTIVIDAD
     if ($accion == 'finalizarActividad'){

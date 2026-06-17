@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-    session_start();
+//    session_start();
     include 'conn.php';
     if ($_COOKIE['nombre'] == '') {
         echo $_COOKIE['nombredelusuario'];

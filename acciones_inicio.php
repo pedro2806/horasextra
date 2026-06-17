@@ -7,23 +7,23 @@ date_default_timezone_set('America/Mexico_City');
 $accion = $_POST["accion"];
 $id_usuario = $_COOKIE['noEmpleado'];
 
-$tipo_servicio = $_POST["tipo_servicio"];
-$tipo_actividad = $_POST["tipo_actividad"];
-$comentarios = $_POST["comentarios"];
-$coordenadas = $_POST["coordenadas"];
-$area = $_POST["area"];
-$ot = $_POST["ot"];
-$ov = $_POST["ov"];
-$fecha_inicio = date("Y-m-d H:i:s");
-$autoriza_jefe = $_POST["autoriza_jefe"];
-$id_ot = $_POST["id_ot"];
+$tipo_servicio = $_POST["tipo_servicio"] ?? '';
+$tipo_actividad = $_POST["tipo_actividad"] ?? '';
+$comentarios = $_POST["comentarios"] ?? '';
+$coordenadas = $_POST["coordenadas"] ?? '';
+$area = $_POST["area"] ?? '';
+$ot = $_POST["ot"] ?? '';
+$ov = $_POST["ov"] ?? '';
+$fecha_inicio = date("Y-m-d H:i:s") ?? '';
+$autoriza_jefe = $_POST["autoriza_jefe"] ?? '';
+$id_ot = $_POST["id_ot"] ?? '';
 
-$idActividad = $_POST["idActividad"];
-$idServicio = $_POST["idServicio"];
+$idActividad = $_POST["idActividad"] ?? '';
+$idServicio = $_POST["idServicio"] ?? '';
 
-$fechaEjecucion = $_POST["fecha_ejecucion"];
+$fechaEjecucion = $_POST["fecha_ejecucion"] ?? '';
 
-$estatus = $_POST["estatus"];
+$estatus = $_POST["estatus"] ?? '';
 
 //FUNCION PARA AGREGAR NUEVO SERVICIO
 
