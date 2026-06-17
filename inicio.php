@@ -1,8 +1,7 @@
 <?php
 //    session_start();
     include 'conn.php';
-    if ($_COOKIE['nombre'] == '') {
-        echo $_COOKIE['nombredelusuario'];
+    if (($_COOKIE['nombre'] ?? '') == '') {
         echo '<script>window.location.assign("index")</script>';
     }
 ?>
@@ -24,6 +23,7 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/horasextra.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
     
@@ -344,8 +344,8 @@
         
         //Llena Tabla "Sin Autorizar"
         function llenaTablaSinAuto(){
-            rolUsuario = <?php echo $_COOKIE["rol"]; ?>;
-            noEmpleado = <?php echo $_COOKIE["noEmpleado"]; ?>;   
+            rolUsuario = <?php echo $_COOKIE["rol"] ?? 0; ?>;
+            noEmpleado = <?php echo $_COOKIE["noEmpleado"] ?? 0; ?>;   
             
             $.ajax({
                     url: 'acciones_inicio.php',

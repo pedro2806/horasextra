@@ -5,8 +5,8 @@
     require("PHPMailer-master/src/PHPMailer.php");
     require("PHPMailer-master/src/SMTP.php");
     
-    $id_usuario = $_COOKIE['noEmpleado'];
-    $solicita = $_COOKIE['nombre'];
+    $id_usuario = $_COOKIE['noEmpleado'] ?? '';
+    $solicita = $_COOKIE['nombre'] ?? '';
     
     $sqlCorreo = "SELECT correo 
                     FROM usuarios 

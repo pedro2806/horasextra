@@ -9,7 +9,7 @@ require("PHPMailer-master/src/PHPMailer.php");
 require("PHPMailer-master/src/SMTP.php");
 
 $deAsunto = "Restablecimiento de Contrase&Ntilde;a";
-$correo = $_POST['correo'];
+$correo = $_POST['correo'] ?? '';
 
 $token = bin2hex(random_bytes(3));
 $estatus_recu_pass = "Autorizada";

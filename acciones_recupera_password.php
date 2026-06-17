@@ -3,12 +3,12 @@ include 'conn.php';
 date_default_timezone_set('America/Mexico_City');
 header('Content-Type: application/json; charset=utf-8');
 
-$accion = $_POST["accion"];
+$accion = $_POST["accion"] ?? '';
 
-$correo =$_POST["correo"];
-$password = $_POST["password"];
+$correo = $_POST["correo"] ?? '';
+$password = $_POST["password"] ?? '';
 
-$token = $_POST['token']; 
+$token = $_POST['token'] ?? ''; 
 
 /*----------------------------------------------------------------------------*/
 

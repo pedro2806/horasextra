@@ -6,7 +6,8 @@ date_default_timezone_set('America/Mexico_City');
 
 //echo "entro";
 $accion = $_POST["accion"] ?? '';
-$id_usuario = $_COOKIE['noEmpleado'];//$_POST["id_usuario"];
+$id_usuario = $_COOKIE['noEmpleado'] ?? '';
+$rol = $_COOKIE['rol'] ?? '';
 
 $tipo_servicio = $_POST["tipo_servicio"] ?? '';
 $tipo_actividad = $_POST["tipo_actividad"] ?? '';
@@ -98,14 +99,14 @@ if ($accion == 'ValidarEstatus'){
             
         } else {
             
-            if($_COOKIE['rol'] == 1){
+            if($rol == 1){
                 $sqlValidarEstatuss ="SELECT s.id as id_servicio, s.id_usuario, '' as fecha_creacion, '' as tipo, s.tipo_s, s.ov, s.ot, '' as id_actividad, '' as estatus, s.estatus as estatusServ 
                 FROM servicio s 
                 WHERE s.estatus = 'En proceso' AND s.id_usuario = $id_usuario AND s.id = $idServicio";
             }
             
             //Se Agrego ROL 4 --14/02/2025--
-            if($_COOKIE['rol'] == 2 || $_COOKIE['rol'] == 4){
+            if($rol == 2 || $rol == 4){
                 $sqlValidarEstatuss ="SELECT s.id as id_servicio, s.id_usuario, '' as fecha_creacion, '' as tipo, s.tipo_s, s.ov, s.ot, '' as id_actividad, '' as estatus, s.estatus as estatusServ 
                 FROM servicio s 
                 WHERE s.estatus = 'En proceso'  AND s.id = $idServicio";
@@ -155,22 +156,27 @@ if ($accion == 'ValidarEstatus'){
 
 //LLENA TABLA SERVICIOS AUTORIZADOS
     if ($accion == 'verServiciosAutorizados'){
-        
-        if($_COOKIE['rol'] == 1){
+        $sqlllenaTablaActividades = null;
+
+        if($rol == 1){
             $sqlllenaTablaActividades = "SELECT S.fecha_creacion, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot, S.ov, S.estatus, S.id, U.nombre
                                         FROM servicio S
                                         INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
                                         WHERE S.id_usuario = $id_usuario AND S.estatus = 'En proceso' AND S.autoriza_jefe = 'Autorizado' AND S.autoriza_gerencia = 'Autorizado'";
         }
-        if($_COOKIE['rol'] == 2 || $_COOKIE['rol'] == 4){
-            $area = $_COOKIE['area'];
+        if($rol == 2 || $rol == 4){
+            $area = ($_COOKIE['area'] ?? '');
             $sqlllenaTablaActividades = "SELECT S.fecha_creacion, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot, S.ov, S.estatus, S.id, U.nombre
                                         FROM servicio S
                                         INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
                                         WHERE U.departamento = $area AND S.estatus = 'En proceso' AND S.autoriza_jefe = 'Autorizado' AND S.autoriza_gerencia = 'Autorizado'";
         }
+        if (!$sqlllenaTablaActividades) {
+            echo json_encode([]);
+            exit;
+        }
         $resllenaTablaActividades = $conn->query($sqlllenaTablaActividades);
-        
+
         $registros = [];
         while($rowllenaTablaActividades = $resllenaTablaActividades->fetch_assoc()) {
             $registros[] = array(

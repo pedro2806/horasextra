@@ -3,8 +3,7 @@
 <?php
 //    session_start();
     include 'conn.php';
-    if ($_COOKIE['nombre'] == '') {
-        echo $_COOKIE['nombredelusuario'];
+    if (($_COOKIE['nombre'] ?? '') == '') {
         echo '<script>window.location.assign("index")</script>';
     }
 ?>
@@ -27,6 +26,7 @@
 <!-- jQuery -->
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/horasextra.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
