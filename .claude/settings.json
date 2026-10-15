@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh issue *)",
+      "Bash(gh pr *)",
+      "Bash(tail -c 200000 error_log)",
+      "Read(//c/Users/User/AppData/Local/Temp/claude/c--wamp64-www-horasextra/d6b40624-0e84-42b6-8221-a1240be190ed/scratchpad/**)",
+      "Bash(./mysql.exe -u root mess_log_tiempo_extra -e \"DESCRIBE usuarios; SELECT '--- AREA ---'; DESCRIBE area; SELECT '--- SERVICIO ---'; DESCRIBE servicio;\")",
+      "Bash(./mysql.exe -u root mess_log_tiempo_extra -e \"SELECT id, noEmpleado, nombre, departamento, rol, jefe, estatus FROM usuarios WHERE nombre LIKE '%Montoya%' OR nombre LIKE '%Misael%';\")",
+      "Bash(./mysql.exe -u root mess_log_tiempo_extra -e \"SELECT rol, COUNT\\(*\\) c FROM usuarios WHERE estatus=1 GROUP BY rol; SELECT '--- JEFES \\(rol 2/4\\) ---'; SELECT noEmpleado, nombre, departamento, rol FROM usuarios WHERE rol IN \\(2,4\\) AND estatus=1;\")",
+      "Bash(./mysql.exe -u root mess_log_tiempo_extra -e \"SELECT id, id_usuario, tipo_s, ot, fecha_creacion, estatus, area, autoriza_jefe, autoriza_gerencia, fecha_ejecucion FROM servicio WHERE id_usuario=566 ORDER BY id DESC LIMIT 15;\")",
+      "Bash(./mysql.exe -u root mess_log_tiempo_extra -e ' *)",
+      "Bash(/c/wamp64/bin/php/php8.2.29/php.exe -l acciones_inicio.php)",
+      "Bash(/c/wamp64/bin/php/php8.2.29/php.exe -l inicio.php)"
+    ]
+  }
+}

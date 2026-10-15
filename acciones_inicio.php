@@ -112,39 +112,54 @@ if($accion == 'nuevoServicio'){
 //Llenar tabla Sin Autorizar
     
     if ($accion == 'llenaTablaSinAuto'){
+        $registros2 = [];
+        $area = ($_COOKIE['area'] ?? '');
+
         $sqlllenaTablaSinAuto = null;
+        $filtro = null;
 
-        if($rol == 1){
-            $sqlllenaTablaSinAuto = "SELECT id, ot, ov, tipo_s, autoriza_jefe, DATE_FORMAT(fecha_creacion, '%d/%m/%Y') AS fecha_creacion, comentarios, (SELECT nombre FROM usuarios WHERE noEmpleado = S.id_usuario) as ingeniero,
-                                    autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot_desglose
-                                    FROM servicio S
-                                    WHERE S.id_usuario = $id_usuario AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion ASC";
-        }
-        
-        if($rol == 2 || $rol == 4){
-            $area = ($_COOKIE['area'] ?? '');
-            $sqlllenaTablaSinAuto = "SELECT S.id, S.ot, S.ov, S.tipo_s, S.autoriza_jefe, DATE_FORMAT(S.fecha_creacion, '%d/%m/%Y') AS fecha_creacion, S.comentarios, U.nombre as ingeniero,
-                                    S.autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS   ot_desglose    
+        $campos = "S.id, S.ot, S.ov, S.tipo_s, S.autoriza_jefe, DATE_FORMAT(S.fecha_creacion, '%d/%m/%Y') AS fecha_creacion, S.comentarios, U.nombre as ingeniero,
+                   S.autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot_desglose";
+
+        // El servicio sigue pendiente mientras falte CUALQUIERA de las dos autorizaciones.
+        // Los parentesis son obligatorios: sin ellos el AND del filtro se evalua antes que el OR
+        // y el filtro por usuario/departamento queda anulado.
+        $pendiente = "(S.autoriza_jefe = 'Por Autorizar' OR S.autoriza_gerencia = 'Por Autorizar')";
+
+        // GERENCIA (empleado 521): ve todos los departamentos.
+        // Se evalua primero y por numero de empleado, igual que los botones de gerencia en inicio.php.
+        // Antes esta rama pedia rol == 3, pero el 521 tiene rol 2, asi que nunca entraba: su vista
+        // global solo funcionaba de rebote por el OR sin parentesis.
+        if($id_usuario == 521){
+            $sqlllenaTablaSinAuto = "SELECT $campos
                                     FROM servicio S
                                     INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
-                                    WHERE U.departamento = $area AND autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion ASC";
+                                    WHERE $pendiente ORDER BY S.fecha_creacion DESC";
         }
-        if($rol == 3 && $id_usuario == 521){
-            $area = ($_COOKIE['area'] ?? '');
-            $sqlllenaTablaSinAuto = "SELECT S.id, S.ot, S.ov, S.tipo_s, S.autoriza_jefe, DATE_FORMAT(S.fecha_creacion, '%d/%m/%Y') AS fecha_creacion, S.comentarios, U.nombre as ingeniero,
-                                    S.autoriza_gerencia, (SELECT GROUP_CONCAT(CONCAT(ot, '- Hrs: ', hrs) SEPARATOR ', ') FROM servicio_ots WHERE id_servicio = S.id) AS ot_desglose        
+        elseif($rol == 1 && $id_usuario !== ''){
+            // El ingeniero solo ve sus propias solicitudes.
+            $sqlllenaTablaSinAuto = "SELECT $campos
                                     FROM servicio S
                                     INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
-                                    WHERE autoriza_jefe = 'Por Autorizar' OR autoriza_gerencia = 'Por Autorizar' ORDER BY S.fecha_creacion ASC";
+                                    WHERE S.id_usuario = ? AND $pendiente ORDER BY S.fecha_creacion DESC";
+            $filtro = $id_usuario;
         }
-        
-        if (!$sqlllenaTablaSinAuto) {
-            echo json_encode([]);
-            exit;
+        elseif(($rol == 2 || $rol == 4) && $area !== ''){
+            // El jefe ve las solicitudes de su departamento, tenga o no el visto bueno de gerencia.
+            $sqlllenaTablaSinAuto = "SELECT $campos
+                                    FROM servicio S
+                                    INNER JOIN usuarios U ON U.noEmpleado = S.id_usuario
+                                    WHERE U.departamento = ? AND $pendiente ORDER BY S.fecha_creacion DESC";
+            $filtro = $area;
         }
-        $resllenaTablaSinAuto = $conn->query($sqlllenaTablaSinAuto);
 
-        if ($resllenaTablaSinAuto->num_rows > 0) {
+        if ($sqlllenaTablaSinAuto && $stmt = $conn->prepare($sqlllenaTablaSinAuto)) {
+            if ($filtro !== null) {
+                $stmt->bind_param("i", $filtro);
+            }
+            $stmt->execute();
+            $resllenaTablaSinAuto = $stmt->get_result();
+
             while ($rowllenaTablaSinAuto = $resllenaTablaSinAuto->fetch_assoc()) {
                 $registros2[] = array(
                     'id' => $rowllenaTablaSinAuto["id"],
@@ -156,33 +171,37 @@ if($accion == 'nuevoServicio'){
                     'comentarios' => $rowllenaTablaSinAuto["comentarios"],
                     'ingeniero' => $rowllenaTablaSinAuto["ingeniero"],
                     'autoriza_gerencia' => $rowllenaTablaSinAuto["autoriza_gerencia"],
-                    'ots' => $rowllenaTablaSinAuto["ot_desglose"]   
+                    'ots' => $rowllenaTablaSinAuto["ot_desglose"]
                 );
             }
-            echo json_encode($registros2);
-        }  
+            $stmt->close();
+        }
+
+        // Siempre se responde JSON valido: con 0 filas la tabla queda vacia en vez de marcar error.
+        echo json_encode($registros2);
     }
     
 //AUTORIZAR SERVICIO (JEFE)
     
-    if ($accion == 'autorizarServicio'){
-        
-        $sqlAutorizaServicio = "UPDATE servicio 
-                                SET autoriza_jefe = '$estatus'
-                                WHERE id = $idServicio";
-        
-        $resAutorizaServicio = $conn->query($sqlAutorizaServicio);
-    }
+    if ($accion == 'autorizarServicio' || $accion == 'autorizarServicioG'){
 
-    //AUTORIZAR SERVICIO (JEFE)
-    
-    if ($accion == 'autorizarServicioG'){
-        
-        $sqlAutorizaServicio = "UPDATE servicio 
-                                SET autoriza_gerencia = '$estatus'
-                                WHERE id = $idServicio";
-        
-        $resAutorizaServicio = $conn->query($sqlAutorizaServicio);
+        $campo = ($accion == 'autorizarServicio') ? 'autoriza_jefe' : 'autoriza_gerencia';
+
+        if (!in_array($estatus, ['Autorizado', 'Rechazado'], true) || (int)$idServicio <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Parametros invalidos.']);
+            exit;
+        }
+
+        $idServicio = (int) $idServicio;
+        $stmt = $conn->prepare("UPDATE servicio SET $campo = ? WHERE id = ?");
+        $stmt->bind_param("si", $estatus, $idServicio);
+
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => $conn->error]);
+        }
+        $stmt->close();
     }
 
     //GUARDAR CAMBIOS SERVICIO

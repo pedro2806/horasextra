@@ -253,6 +253,9 @@
             $('#tablaSinAutorizar').DataTable({
                 "paging": true,
                 "searching": false,
+                // La fecha viaja como dd/mm/aaaa y DataTables la ordenaria como texto.
+                // Se respeta el orden del servidor (mas recientes primero).
+                "order": [],
                 "language": {
                     "info": "Mostrando _START_ a _END_ de _TOTAL_ ",
                     "paginate": {
@@ -451,12 +454,15 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             Swal.fire({
-                                icon: "success",
-                                text: "¡Se " + estatusText + " el servicio!",
+                                icon: "error",
+                                text: "¡No se pudo " + estatusText.toLowerCase() + " el servicio!",
                             });
+                        },
+                        // Se refresca al terminar el UPDATE, no antes.
+                        complete: function() {
+                            llenaTablaSinAuto();
                         }
                     });
-                    llenaTablaSinAuto();
                 } else if (result.isDenied) {
                     Swal.fire("Cambios no guardados", "");
                 }
@@ -489,12 +495,15 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             Swal.fire({
-                                icon: "success",
-                                text: "¡Se " + estatusText + " el servicio!",
+                                icon: "error",
+                                text: "¡No se pudo " + estatusText.toLowerCase() + " el servicio!",
                             });
+                        },
+                        // Se refresca al terminar el UPDATE, no antes.
+                        complete: function() {
+                            llenaTablaSinAuto();
                         }
                     });
-                    llenaTablaSinAuto();
                 } else if (result.isDenied) {
                     Swal.fire("Cambios no guardados", "");
                 }
